@@ -1,0 +1,19 @@
+version: 2.1
+orbs:
+  cypress: cypress-io/cypress@1
+workflows:
+  build:
+    jobs:
+      - cypress/install:
+          yarn: true
+          build: 'yarn run build'
+      - cypress/run:
+          requires:
+            - cypress/install
+          yarn: true
+          record: true
+          parallel: true
+          parallelism: 4
+          group: 'all tests'
+          start: 'yarn run serve'
+          command: 'yarn run test' # Run all tests, but edited "cypress/run"
