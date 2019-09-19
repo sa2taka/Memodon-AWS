@@ -1,5 +1,9 @@
 # memodon-aws
 
+[![CircleCI](https://img.shields.io/circleci/build/github/sa2taka/Memodon-AWS?label=circleci)](https://circleci.com/gh/sa2taka/Memodon-AWS)
+[![codecov](https://codecov.io/gh/sa2taka/Memodon-AWS/branch/master/graph/badge.svg)](https://codecov.io/gh/sa2taka/Memodon-AWS)
+
+
 Memodon on AWS amplify
 
 ## Project setup
