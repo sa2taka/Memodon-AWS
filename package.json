@@ -5,17 +5,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "test": "yarn lint && yarn test:unit --coverage && codecov && yarn test:e2e",
-    "test:e2e": "vue-cli-service test:e2e --headless",
+    "lint": "vue-cli-service lint",
     "cypress": "vue-cli-service test:e2e",
+    "test:e2e": "vue-cli-service test:e2e --headless",
     "test:unit": "vue-cli-service test:unit"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "semi": true,
-    "trailingComma": "es5",
-    "arrowParens": "always"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -24,6 +18,7 @@
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
+    "vuetify": "^2.0.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -42,8 +37,16 @@
     "sass-loader": "^7.1.0",
     "ts-jest": "^23.0.0",
     "typescript": "^3.4.3",
+    "vue-cli-plugin-vuetify": "^0.6.3",
     "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.2.2",
     "vuex-module-decorators": "^0.10.1"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "es5",
+    "arrowParens": "always"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
