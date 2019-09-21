@@ -1,45 +1,33 @@
-version: 2.1
-orbs:
-  cypress: cypress-io/cypress@1
-executors:
-  node:
+# Orb 'cypress-io/cypress@1' resolved to 'cypress-io/cypress@1.10.0'
+version: 2
+jobs:
+  setup:
     working_directory: ~/workspace
     docker:
       - image: circleci/node:latest
-commands:
-  restore_yarn:
-    steps:
-      - restore_cache:
-          name: Restore yarn dependencies
-          key: cachev21-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
-          working_directory: ~/workspace
-
-  save_yarn:
-    steps:
-      - save_cache:
-          name: Cache yarn dependencies
-          key: cachev21-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
-          paths:
-            - ~/workspace/node_modules
-          working_directory: ~/workspace
-jobs:
-  setup:
-    executor:
-      name: node
     steps:
       - checkout
-      - restore_yarn
+      - restore_cache:
+          name: Restore yarn dependencies
+          key: cache_common_v21_2-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+          working_directory: ~/workspace
       - run:
           name: Install dependencies
           command: yarn install --frozen-lockfile
-      - save_yarn
+      - save_cache:
+          name: Cache yarn dependencies
+          key: cache_common_v21_2-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - ~/workspace/node_modules
+          working_directory: ~/workspace
       - persist_to_workspace:
           root: ~/
           paths:
             - workspace
   lint:
-    executor:
-      name: node
+    working_directory: ~/workspace
+    docker:
+      - image: circleci/node:latest
     steps:
       - attach_workspace:
           at: ~/
@@ -47,14 +35,55 @@ jobs:
           name: Run lint
           command: yarn run lint
   unit:
-    executor:
-      name: node
+    working_directory: ~/workspace
+    docker:
+      - image: circleci/node:latest
     steps:
       - attach_workspace:
           at: ~/
       - run:
           name: Run unit
           command: yarn run test:unit
+  cypress/install:
+    docker:
+      - image: cypress/base:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache_cypress_v21_2-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+      - run:
+          name: Yarn install
+          command: yarn install --frozen-lockfile
+          working_directory: ''
+      - run:
+          name: Verify Cypress
+          command: npx cypress verify
+          working_directory: ''
+      - save_cache:
+          key: cache_cypress_v21_2-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - ~/.cache
+            - ~/project/node_modules # Add to be cached node_modules
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project
+            - .cache/Cypress
+  cypress/run:
+    docker:
+      - image: cypress/base:10
+    parallelism: 4
+    steps:
+      - run:
+          command:
+            echo "Assuming dependencies were installed using cypress/install
+            job"
+      - attach_workspace:
+          at: ~/
+      - run:
+          command: yarn run test:e2e
+          working_directory: ''
 workflows:
   build:
     jobs:
@@ -65,14 +94,87 @@ workflows:
       - unit:
           requires:
             - setup
-      - cypress/install:
-          yarn: true
+      - cypress/install
       - cypress/run:
           requires:
             - cypress/install
-          yarn: true
-          record: true
-          parallel: true
-          parallelism: 4
-          group: 'all tests'
-          command: 'yarn run test:e2e' # Run all tests(Do not write cypress/run)
+  version: 2
+# Original config.yml file:
+# version: 2.1
+# orbs:
+#   cypress: cypress-io/cypress@1
+# executors:
+#   node:
+#     working_directory: ~/workspace
+#     docker:
+#       - image: circleci/node:latest
+# commands:
+#   restore_yarn:
+#     steps:
+#       - restore_cache:
+#           name: Restore yarn dependencies
+#           key: cachev21-{{ arch }}-{{ .Branch }}-{{ checksum \"package.json\" }}
+#           working_directory: ~/workspace
+#
+#   save_yarn:
+#     steps:
+#       - save_cache:
+#           name: Cache yarn dependencies
+#           key: cachev21-{{ arch }}-{{ .Branch }}-{{ checksum \"package.json\" }}
+#           paths:
+#             - ~/workspace/node_modules
+#           working_directory: ~/workspace
+# jobs:
+#   setup:
+#     executor:
+#       name: node
+#     steps:
+#       - checkout
+#       - restore_yarn
+#       - run:
+#           name: Install dependencies
+#           command: yarn install --frozen-lockfile
+#       - save_yarn
+#       - persist_to_workspace:
+#           root: ~/
+#           paths:
+#             - workspace
+#   lint:
+#     executor:
+#       name: node
+#     steps:
+#       - attach_workspace:
+#           at: ~/
+#       - run:
+#           name: Run lint
+#           command: yarn run lint
+#   unit:
+#     executor:
+#       name: node
+#     steps:
+#       - attach_workspace:
+#           at: ~/
+#       - run:
+#           name: Run unit
+#           command: yarn run test:unit
+# workflows:
+#   build:
+#     jobs:
+#       - setup
+#       - lint:
+#           requires:
+#             - setup
+#       - unit:
+#           requires:
+#             - setup
+#       - cypress/install:
+#           yarn: true
+#       - cypress/run:
+#           requires:
+#             - cypress/install
+#           yarn: true
+#           record: true
+#           parallel: true
+#           parallelism: 4
+#           group: 'all tests'
+#           command: 'yarn run test:e2e' # Run all tests(Do not write cypress/run)
