@@ -67,7 +67,6 @@ workflows:
             - setup
       - cypress/install:
           yarn: true
-          build: 'yarn run build'
       - cypress/run:
           requires:
             - cypress/install
