@@ -2,14 +2,11 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>Memodon</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn text href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank">
-        <span class="mr-2">Latest Release</span>
-        <v-icon>fas fa-external-link-alt</v-icon>
-      </v-btn>
+      <v-label :dark="isDark">Dark Theme</v-label>
+      <v-switch v-model="isDark" class="center-switch" :dark="isDark"></v-switch>
     </v-app-bar>
 
     <v-content id="main">
@@ -19,20 +16,30 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Component, Watch, Vue } from 'vue-property-decorator';
+import theme from '@/store/modules/theme';
 
-export default Vue.extend({
-  name: 'App',
-  data: () => ({
-    //
-  }),
-});
+@Component
+export default class App extends Vue {
+  public isDark: boolean = false;
+
+  @Watch('isDark')
+  private changedTheme(isDark: boolean) {
+    this.$vuetify.theme.dark = isDark;
+    theme.set(isDark ? 'dark' : 'light');
+  }
+}
 </script>
-
 <style lang="scss" scoped>
 #main {
   width: 90%;
   position: relative;
   left: 5%;
+}
+
+.center-switch {
+  position: relative;
+  top: 12px;
+  margin-left: 4px;
 }
 </style>

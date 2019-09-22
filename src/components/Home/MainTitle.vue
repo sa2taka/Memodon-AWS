@@ -5,8 +5,12 @@
         <div class="index-title__y"></div>
       </div>
       <div class="index-title__content">
-        <h1 class="index-title__content__base index-title__content__label">Memodon</h1>
-        <div class="index-title__content__base index-title__content__text">マストドンがメモ帳に</div>
+        <h1
+          :class="['index-title__content__base', 'index-title__content__label', `background--${theme}`]"
+        >Memodon</h1>
+        <div
+          :class="['index-title__content__base', 'index-title__content__text', `background--${theme}`]"
+        >マストドンがメモ帳に</div>
         <div class="index-title__content__base index-title__content__icon">
           <v-icon class="index-title__content__icon__content">fa-pen</v-icon>
         </div>
@@ -17,9 +21,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import theme from '@/store/modules/theme';
 
 @Component
-export default class MainTitle extends Vue {}
+export default class MainTitle extends Vue {
+  get theme(): string {
+    return theme.theme;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -105,7 +114,6 @@ export default class MainTitle extends Vue {}
 .index-title__content__label:before {
   content: '';
   position: absolute;
-  background: map-get($material-theme, background);
   width: 100%;
   height: 100%;
   right: 0%;
@@ -131,12 +139,19 @@ export default class MainTitle extends Vue {}
 .index-title__content__text:before {
   content: '';
   position: absolute;
-  background: map-get($material-theme, background);
   width: 100%;
   height: 100%;
   right: 0%;
   animation: fadeFromLeft 0.4s linear 2.8s forwards;
   animation-fill-mode: both;
+}
+
+.background--light:before {
+  background: map-get($material-light, background);
+}
+
+.background--dark:before {
+  background: map-get($material-dark, background);
 }
 
 @keyframes topLine {
