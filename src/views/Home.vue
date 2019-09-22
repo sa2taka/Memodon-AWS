@@ -1,11 +1,17 @@
 <template>
-  <h1>Home</h1>
+  <MainTitle></MainTitle>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-@Component
+import MainTitle from '@/components/Home/MainTitle.vue';
+
+@Component({
+  components: {
+    MainTitle,
+  },
+})
 export default class Home extends Vue {}
 </script>
 
