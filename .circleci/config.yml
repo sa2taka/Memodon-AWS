@@ -82,7 +82,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          command: yarn run test:e2e
+          command: yarn cypress run --record --group 'all tests' --parallel --headed
           working_directory: ''
 workflows:
   build:
