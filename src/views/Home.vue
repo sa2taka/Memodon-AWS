@@ -1,5 +1,7 @@
 <template>
-  <MainTitle></MainTitle>
+  <v-layout justify-center mt-9>
+    <MainTitle></MainTitle>
+  </v-layout>
 </template>
 
 <script lang="ts">
