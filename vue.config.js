@@ -1,8 +1,17 @@
+const globalSassFiles = ['@/sass/_veutify.scss'];
+
 module.exports = {
   devServer: {
     disableHostCheck: true,
   },
-  configureWebpack: {
-    devtool: 'source-map',
+  css: {
+    loaderOptions: {
+      sass: {
+        data: `@import "@/sass/_vuetify.sass"`,
+      },
+      scss: {
+        data: `@import "@/sass/_vuetify.scss";`,
+      },
+    },
   },
 };

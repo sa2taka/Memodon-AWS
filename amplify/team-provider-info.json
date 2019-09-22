@@ -1,14 +1,14 @@
 {
     "test": {
         "awscloudformation": {
-            "AuthRoleName": "memodon-aws-test-20190919042506-authRole",
-            "UnauthRoleArn": "arn:aws:iam::876243670426:role/memodon-aws-test-20190919042506-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::876243670426:role/memodon-aws-test-20190919042506-authRole",
+            "AuthRoleName": "memodon-test-20190922211651-authRole",
+            "UnauthRoleArn": "arn:aws:iam::876243670426:role/memodon-test-20190922211651-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::876243670426:role/memodon-test-20190922211651-authRole",
             "Region": "ap-northeast-1",
-            "DeploymentBucketName": "memodon-aws-test-20190919042506-deployment",
-            "UnauthRoleName": "memodon-aws-test-20190919042506-unauthRole",
-            "StackName": "memodon-aws-test-20190919042506",
-            "StackId": "arn:aws:cloudformation:ap-northeast-1:876243670426:stack/memodon-aws-test-20190919042506/7561b270-da95-11e9-b543-0a6f9c86115e"
+            "DeploymentBucketName": "memodon-test-20190922211651-deployment",
+            "UnauthRoleName": "memodon-test-20190922211651-unauthRole",
+            "StackName": "memodon-test-20190922211651",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:876243670426:stack/memodon-test-20190922211651/dd1f2560-dd32-11e9-a64c-0e42406983d0"
         }
     }
 }

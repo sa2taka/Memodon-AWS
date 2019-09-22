@@ -150,6 +150,7 @@ export default class MainTitle extends Vue {}
   font-size: 42px;
   font-weight: 600;
 }
+
 .index-title__content__label:before {
   content: '';
   position: absolute;
