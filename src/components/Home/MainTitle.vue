@@ -59,6 +59,7 @@ export default class MainTitle extends Vue {
   content: '';
   position: absolute;
   background: var(--v-primary-base);
+  transition: all 0.4s ease-out;
 }
 .index-title__y:before {
   bottom: 0;
