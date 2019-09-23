@@ -5,7 +5,7 @@
         <span>Memodon</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-label :dark="isDark">Dark Theme</v-label>
+      <v-label :dark="isDark">Dark Mode</v-label>
       <v-switch v-model="isDark" class="center-switch" :dark="isDark"></v-switch>
     </v-app-bar>
 
@@ -23,8 +23,20 @@ import theme from '@/store/modules/theme';
 export default class App extends Vue {
   public isDark: boolean = false;
 
+  public created() {
+    if (localStorage.theme) {
+      this.isDark = localStorage.theme === 'dark';
+      this.setTheme(this.isDark);
+    }
+  }
+
   @Watch('isDark')
   private changedTheme(isDark: boolean) {
+    this.setTheme(isDark);
+  }
+
+  private setTheme(isDark: boolean) {
+    localStorage.theme = isDark ? 'dark' : 'light';
     this.$vuetify.theme.dark = isDark;
     theme.set(isDark ? 'dark' : 'light');
   }
@@ -34,7 +46,7 @@ export default class App extends Vue {
 #main {
   width: 90%;
   position: relative;
-  left: 5%;
+  margin: 0 auto;
 }
 
 .center-switch {
