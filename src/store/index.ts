@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import Theme from '@/store/modules/theme';
-
 Vue.use(Vuex);
 
 interface RootState {

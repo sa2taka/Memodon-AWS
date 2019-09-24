@@ -36,5 +36,3 @@ aws-exports.js
 awsconfiguration.json
 
 coverage
-
-tests/**/__snapshots__
