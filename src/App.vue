@@ -31,14 +31,14 @@ export default class App extends Vue {
   }
 
   @Watch('isDark')
-  private changedTheme(isDark: boolean) {
+  public changedTheme(isDark: boolean) {
     this.setTheme(isDark);
   }
 
   private setTheme(isDark: boolean) {
     localStorage.theme = isDark ? 'dark' : 'light';
     this.$vuetify.theme.dark = isDark;
-    theme.set(isDark ? 'dark' : 'light');
+    theme.setTheme(isDark ? 'dark' : 'light');
   }
 }
 </script>

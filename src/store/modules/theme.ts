@@ -19,11 +19,6 @@ class Theme extends VuexModule implements ThemeState {
   public setTheme(theme: 'dark' | 'light') {
     this.theme = theme;
   }
-
-  @Action({ commit: 'setTheme' })
-  public set(theme: 'dark' | 'light') {
-    return theme;
-  }
 }
 
 const themeModule = getModule(Theme);
