@@ -92,7 +92,7 @@
       }
     },
     "testMatch": [
-      "**/unit/*.+(spec|test).+(ts|tsx)"
+      "**/unit/**/*.+(spec|test).+(ts|tsx)"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
@@ -100,7 +100,8 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/src/*/**/*.{ts,js,vue}",
-      "!**/src/aws-exports.js",
+      "**/src/App.vue",
+      "!**/src/plugin/**",
       "!**/node_modules/**"
     ]
   }
