@@ -102,7 +102,7 @@
     "collectCoverageFrom": [
       "**/src/*/**/*.{ts,js,vue}",
       "**/src/App.vue",
-      "!**/src/plugin/**",
+      "!**/src/plugins/**",
       "!**/node_modules/**"
     ],
     "snapshotSerializers": [
