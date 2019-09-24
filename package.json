@@ -7,12 +7,16 @@
     "build": "vue-cli-service build",
     "test": "yarn lint && yarn test:unit --coverage && codecov && yarn test:e2e",
     "lint": "vue-cli-service lint",
-    "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "cypress:open": "vue-cli-service test:e2e",
+    "test:e2e": "vue-cli-service test:e2e --headless",
+    "test:unit": "vue-cli-service test:unit --silent",
+    "test:unit:verbose": "vue-cli-service test:unit --verbose"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.2",
     "core-js": "^2.6.5",
     "register-service-worker": "^1.6.2",
+    "roboto-fontface": "*",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
@@ -21,6 +25,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.1",
     "@types/jest": "^23.1.4",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-e2e-cypress": "^3.11.0",
@@ -29,14 +34,21 @@
     "@vue/cli-plugin-unit-jest": "^3.11.0",
     "@vue/cli-service": "^3.11.0",
     "@vue/test-utils": "1.0.0-beta.29",
+    "autoprefixer": "^9.6.1",
     "babel-core": "7.0.0-bridge.0",
     "codecov": "^3.5.0",
+    "deepmerge": "^4.0.0",
+    "fibers": "^4.0.1",
+    "jest-localstorage-mock": "^2.4.0",
+    "jest-serializer-vue": "^2.0.2",
     "lint-staged": "^8.1.5",
-    "sass": "^1.18.0",
-    "sass-loader": "^7.1.0",
+    "sass": "^1.22.12",
+    "sass-loader": "^7.3.1",
+    "sass-resources-loader": "^2.0.1",
     "ts-jest": "^23.0.0",
     "typescript": "^3.4.3",
     "vue-cli-plugin-vuetify": "^0.6.3",
+    "vue-mixin-decorator": "^1.2.0",
     "vue-template-compiler": "^2.6.10",
     "vuetify-loader": "^1.2.2",
     "vuex-module-decorators": "^0.10.1"
@@ -58,6 +70,43 @@
     "*.vue": [
       "vue-cli-service lint",
       "git add"
+    ]
+  },
+  "jest": {
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ],
+    "moduleFileExtensions": [
+      "json",
+      "vue",
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest",
+      ".*\\.(vue)$": "vue-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.json",
+        "diagnostics": false
+      }
+    },
+    "testMatch": [
+      "**/unit/**/*.+(spec|test).+(ts|tsx)"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/src/*/**/*.{ts,js,vue}",
+      "**/src/App.vue",
+      "!**/src/plugins/**",
+      "!**/node_modules/**"
+    ],
+    "snapshotSerializers": [
+      "jest-serializer-vue"
     ]
   }
 }

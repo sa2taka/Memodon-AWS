@@ -1,30 +1,40 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
+import '@fortawesome/fontawesome-free/css/all.css';
 import ja from 'vuetify/src/locale/ja';
 
 Vue.use(Vuetify);
 
 export default new Vuetify({
   theme: {
-      options: {
-        customProperties: true,
-      },
+    options: {
+      customProperties: true,
+    },
     themes: {
       light: {
-        primary: '#ee44aa',
-        secondary: '#424242',
-        accent: '#82B1FF',
-        error: '#FF5252',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#FFC107',
+        primary: '#009688',
+        secondary: '#ff5722',
+        accent: '#00bcd4',
+        error: '#f44336',
+        warning: '#cddc39',
+        info: '#8bc34a',
+        success: '#2196f3',
+      },
+      dark: {
+        primary: '#009688',
+        secondary: '#ff5722',
+        accent: '#00bcd4',
+        error: '#f44336',
+        warning: '#cddc39',
+        info: '#8bc34a',
+        success: '#2196f3',
       },
     },
   },
-    lang: {
-      locales: { ja },
-      current: 'ja',
-    },
+  lang: {
+    locales: { ja },
+    current: 'ja',
+  },
   icons: {
     iconfont: 'fa',
   },
