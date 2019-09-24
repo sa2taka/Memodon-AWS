@@ -82,7 +82,11 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          command: yarn cypress run --record --group 'all tests' --parallel --headed
+          command: yarn serve --port 8888
+          background: true
+          working_directory: ''
+      - run:
+          command: yarn cypress run --record --group 'all tests' --parallel --headed --config baseUrl=http://localhost:8888
           working_directory: ''
 workflows:
   build:
