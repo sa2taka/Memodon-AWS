@@ -7,7 +7,9 @@ describe('App', () => {
   it('become dark mode and keep it', () => {
     cy.visit('/');
     cy.get('div.v-application').should('have.class', 'theme--light');
-    cy.get('div.v-input.center-switch').click();
+    cy.get(
+      'div.v-input.center-switch div.v-input--selection-controls__ripple'
+    ).click();
     cy.get('div.v-application').should('have.class', 'theme--dark');
 
     cy.visit('/');
