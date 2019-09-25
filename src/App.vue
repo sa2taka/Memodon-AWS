@@ -6,7 +6,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-label :dark="isDark">Dark Mode</v-label>
-      <v-switch v-model="isDark" class="center-switch" :dark="isDark"></v-switch>
+      <v-switch v-model="isDark" class="center-switch" :dark="isDark" id="dark-mode-switch"></v-switch>
     </v-app-bar>
 
     <v-content id="main">
