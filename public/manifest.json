@@ -1,6 +1,6 @@
 {
-  "name": "temp",
-  "short_name": "temp",
+  "name": "Memodon-AWS",
+  "short_name": "Memodon-AWS",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
