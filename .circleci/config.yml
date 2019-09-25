@@ -86,7 +86,7 @@ jobs:
           background: true
           working_directory: ''
       - run:
-          command: yarn cypress run --record --group 'all tests' --parallel --headed --config baseUrl=http://localhost:8888
+          command: yarn cypress run --record --group 'all tests' --parallel --config baseUrl=http://localhost:8888
           working_directory: ''
 workflows:
   build:
