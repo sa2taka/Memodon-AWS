@@ -1,1 +1,9 @@
-{}
+{
+	"auth": {
+		"memodonecbd67ee": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}
