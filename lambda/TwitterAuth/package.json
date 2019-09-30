@@ -1,8 +1,0 @@
-{
-  "name": "TwitterAuth",
-  "version": "1.0.0",
-  "description": "authorize twitter",
-  "main": "index.js",
-  "author": "sa2taka",
-  "license": "MIT"
-}
