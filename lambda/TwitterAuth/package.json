@@ -5,7 +5,6 @@
   "author": "sa2taka",
   "license": "MIT",
   "dependencies": {
-    "oauth-1.0a": "^2.2.6",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
   }

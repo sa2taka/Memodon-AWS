@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const OAuth = require('oauth-1.0a');
 const rp = require('request-promise');
 
 exports.handler = async (event, context) => {
@@ -11,20 +10,8 @@ exports.handler = async (event, context) => {
 };
 
 const getToken = async () => {
-    const consumer = {
-    key: process.env['ConsumerKey'],
-    secret: process.env['ConsumerSecret']
-  };
-  const oauth = OAuth({
-    consumer,
-    signature_method: 'HMAC-SHA1',
-    hash_function(base_string, key) {
-    return crypto
-        .createHmac('sha1', key)
-        .update(base_string)
-        .digest('base64')
-    },
-  });
+  const consumer_key =  process.env['ConsumerKey'];
+  const consumer_secret =  process.env['ConsumerSecret'];
   
   
   const url = 'https://api.twitter.com/oauth/request_token';
@@ -46,7 +33,10 @@ const getToken = async () => {
     form: {
       oauth_callback
     },
-    headers: oauth.toHeader(oauth.authorize(request_data))
+    oauth: {
+      consumer_key,
+      consumer_secret
+    }
   })
   .catch(error => {
     console.log(error);
