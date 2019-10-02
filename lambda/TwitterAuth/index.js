@@ -1,12 +1,23 @@
 const crypto = require('crypto');
 const rp = require('request-promise');
+const AWS = require('aws-sdk');
+
+AWS.config.update({region: 'ap-northeast-1'});
+
+const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
 exports.handler = async (event, context) => {
   const { token, secret } = await getToken();
   
-  const redirect = `https://api.twitter.com/oauth/authorize?oauth_token=${token}`
+  const sessionId = await putToDynamo(secret);
+  const set_cookie_sentence = generateSetCookieSentence(sessionId);
   
-  context.succeed({'Location': redirect});
+  const redirect = `https://api.twitter.com/oauth/authorize?oauth_token=${token}`
+  // Cookie is mapped to Set-Cookie header
+  context.succeed({
+    'Location': redirect, 
+    'Cookie': sessionId,
+  });
 };
 
 const getToken = async () => {
@@ -51,9 +62,43 @@ const getToken = async () => {
 }
 
 const parseAuthRes = (res) => {
-  const token = res.match(/^oauth_token=(\w+?)&/)[1]
-  const secret = res.match(/oauth_token_secret=(\w+?)&/)[1]
+  const token = res.match(/^oauth_token=([^&]+?)&/)[1]
+  const secret = res.match(/oauth_token_secret=([^&]+?)&/)[1]
   const oauth_callback_confirmed = res.match(/oauth_callback_confirmed=(true|false)/)[1]
   
   return { token, secret, oauth_callback_confirmed };
+}
+
+const putToDynamo = async (secret) => {
+  const sessionId = crypto.randomBytes(16).toString('hex');
+  const dateToDelete = Math.floor(Date.now() / 1000) + process.env['TimeToDelete'] * 6;
+  const params = {
+    TableName: 'Session',
+    Item: {
+      sessionId: {
+        S: sessionId,
+      },
+      token_secret: {
+        S: secret,  
+      },
+      dateToDelete: {
+        N: dateToDelete.toString(),
+      },
+    },
+  };
+
+  await ddb.putItem(params).promise()
+  .then((data) => {
+    console.log('Success: ', data);
+  })
+  .catch((err) => {
+    console.log('Error: ', err);
+    throw err;
+  });
+  
+  return sessionId;
+}
+
+const generateSetCookieSentence = (sessionId) => {
+  return `sessionId=${sessionId}; Secure; HttpOnly; Path=/; Max-Age=300`
 }
