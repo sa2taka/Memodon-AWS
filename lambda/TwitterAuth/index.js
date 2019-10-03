@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const rp = require('request-promise');
 const AWS = require('aws-sdk');
+const qs = require('querystring');
 
 AWS.config.update({region: 'ap-northeast-1'});
 
@@ -10,13 +11,13 @@ exports.handler = async (event, context) => {
   const { token, secret } = await getToken();
   
   const sessionId = await putToDynamo(secret);
-  const set_cookie_sentence = generateSetCookieSentence(sessionId);
+  const setCookieSentence = generateSetCookieSentence(sessionId);
   
   const redirect = `https://api.twitter.com/oauth/authorize?oauth_token=${token}`
   // Cookie is mapped to Set-Cookie header
   context.succeed({
     'Location': redirect, 
-    'Cookie': set_cookie_sentence,
+    'Cookie': setCookieSentence,
   });
 };
 
@@ -54,11 +55,13 @@ const getToken = async () => {
 }
 
 const parseAuthRes = (res) => {
-  const token = res.match(/oauth_token=([^&]+)/)[1]
-  const secret = res.match(/oauth_token_secret=([^&]+)/)[1]
-  const oauth_callback_confirmed = res.match(/oauth_callback_confirmed=(true|false)/)[1]
+  const data = qs.parse(res);
   
-  return { token, secret, oauth_callback_confirmed };
+  return { 
+           token: data.oauth_token, 
+           secret: data.oauth_token_secret, 
+           oauth_callback_confirmed: data.oauth_token_secret 
+         }
 }
 
 const putToDynamo = async (secret) => {
