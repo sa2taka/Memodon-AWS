@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
   // Cookie is mapped to Set-Cookie header
   context.succeed({
     'Location': redirect, 
-    'Cookie': sessionId,
+    'Cookie': set_cookie_sentence,
   });
 };
 
@@ -54,8 +54,8 @@ const getToken = async () => {
 }
 
 const parseAuthRes = (res) => {
-  const token = res.match(/^oauth_token=([^&]+?)&/)[1]
-  const secret = res.match(/oauth_token_secret=([^&]+?)&/)[1]
+  const token = res.match(/oauth_token=([^&]+)/)[1]
+  const secret = res.match(/oauth_token_secret=([^&]+)/)[1]
   const oauth_callback_confirmed = res.match(/oauth_callback_confirmed=(true|false)/)[1]
   
   return { token, secret, oauth_callback_confirmed };
@@ -63,14 +63,14 @@ const parseAuthRes = (res) => {
 
 const putToDynamo = async (secret) => {
   const sessionId = crypto.randomBytes(16).toString('hex');
-  const dateToDelete = Math.floor(Date.now() / 1000) + process.env['TimeToDelete'] * 6;
+  const dateToDelete = Math.floor(Date.now() / 1000) + process.env['TimeToDelete'] * 60;
   const params = {
     TableName: 'Session',
     Item: {
       sessionId: {
         S: sessionId,
       },
-      token_secret: {
+      tokenSecret: {
         S: secret,  
       },
       dateToDelete: {
