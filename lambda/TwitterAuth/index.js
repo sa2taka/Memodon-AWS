@@ -29,14 +29,6 @@ const getToken = async () => {
   const method = 'POST';
   const oauth_callback = process.env['CallbackURL'];
   
-  const request_data = {
-    url,
-    method,
-    data: {
-      oauth_callback
-    }
-  };
-  
   const res = await rp({
     method,
     uri: url,
