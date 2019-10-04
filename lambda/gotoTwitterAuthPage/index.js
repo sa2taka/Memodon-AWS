@@ -9,10 +9,10 @@ AWS.config.update({region: 'ap-northeast-1'});
 const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
 exports.handler = async (event, context) => {
-  const { token, secret } = await getToken();
+  const origin = getOrigin(event.referer);
+  const { token, secret } = await getToken(origin);
   
-  const origin = getOrigin(event.Referer);
-  const sessionId = await putToDynamo(secret, origin);
+  const sessionId = await putToDynamo(secret);
   const setCookieSentence = generateSetCookieSentence(sessionId);
   
   const redirect = `https://api.twitter.com/oauth/authorize?oauth_token=${token}`
@@ -23,14 +23,13 @@ exports.handler = async (event, context) => {
   });
 };
 
-const getToken = async () => {
+const getToken = async (origin) => {
   const consumer_key =  process.env['ConsumerKey'];
   const consumer_secret =  process.env['ConsumerSecret'];
   
-  
   const url = 'https://api.twitter.com/oauth/request_token';
   const method = 'POST';
-  const oauth_callback = process.env['CallbackURL'];
+  const oauth_callback = origin + process.env['callbackPath'];
   
   const res = await rp({
     method,
@@ -78,9 +77,6 @@ const putToDynamo = async (secret, origin) => {
       tokenSecret: {
         S: secret,  
       },
-      origin: {
-        S: origin,
-      },
       dateToDelete: {
         N: dateToDelete.toString(),
       },
@@ -104,5 +100,8 @@ const generateSetCookieSentence = (sessionId) => {
 }
 
 const getOrigin = (referer) => {
+  if (!referer) {
+    return process.env['defaultCallbackOrigin'];
+  }
   return new URL(referer).origin;
 }
