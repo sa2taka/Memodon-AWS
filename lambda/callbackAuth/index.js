@@ -36,10 +36,12 @@ exports.handler = async (event, context) => {
                   console.log('Error', err, err.stack);
                   throw 'register_error';
                 })
+  const Location = process.env['callbackURL']
                 
   context.succeed({ 
     id, 
     Cookie: 'sessionId=deleted; Max-Age=-1',
+    Location,
   });
 };
 
@@ -143,7 +145,10 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl) => {
     TableName: 'MemodonUser',
     Key: {
       id: {
-        S: id
+        S: id,
+      },
+      userId: {
+        S: twitterId.toString(),
       }
     }
   })
@@ -159,8 +164,8 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl) => {
         id: {
           S: id,
         },
-        ownerTwitterId: {
-          N: twitterId,
+        userId: {
+          S: twitterId.toString(),
         },
         name: {
           S: name,

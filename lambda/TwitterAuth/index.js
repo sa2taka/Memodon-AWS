@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const rp = require('request-promise');
 const AWS = require('aws-sdk');
 const qs = require('querystring');
+const URL = require('url').URL;
 
 AWS.config.update({region: 'ap-northeast-1'});
 
@@ -10,7 +11,8 @@ const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 exports.handler = async (event, context) => {
   const { token, secret } = await getToken();
   
-  const sessionId = await putToDynamo(secret);
+  const origin = getOrigin(event.Referer);
+  const sessionId = await putToDynamo(secret, origin);
   const setCookieSentence = generateSetCookieSentence(sessionId);
   
   const redirect = `https://api.twitter.com/oauth/authorize?oauth_token=${token}`
@@ -64,7 +66,7 @@ const parseAuthRes = (res) => {
          }
 }
 
-const putToDynamo = async (secret) => {
+const putToDynamo = async (secret, origin) => {
   const sessionId = crypto.randomBytes(16).toString('hex');
   const dateToDelete = Math.floor(Date.now() / 1000) + process.env['TimeToDelete'] * 60;
   const params = {
@@ -75,6 +77,9 @@ const putToDynamo = async (secret) => {
       },
       tokenSecret: {
         S: secret,  
+      },
+      origin: {
+        S: origin,
       },
       dateToDelete: {
         N: dateToDelete.toString(),
@@ -95,5 +100,9 @@ const putToDynamo = async (secret) => {
 }
 
 const generateSetCookieSentence = (sessionId) => {
-  return `sessionId=${sessionId}; Secure; HttpOnly; Path=/; Max-Age=300`
+  return `sessionId=${sessionId}; Secure; HttpOnly; Path=/; Max-Age=300`;
+}
+
+const getOrigin = (referer) => {
+  return new URL(referer).origin;
 }
