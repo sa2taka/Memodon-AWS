@@ -16,6 +16,7 @@ exports.handler = async (event, context) => {
   
   const oauth_secret = sessionData.Item.tokenSecret.S;
   const dateToDelete = sessionData.Item.dateToDelete.N;
+  const origin = sessionData.Item.origin.S;
   
   if (dateToDelete - Math.floor(Date.now() / 1000) < 0) {
     throw 'session_is_expired';
@@ -36,7 +37,10 @@ exports.handler = async (event, context) => {
                   console.log('Error', err, err.stack);
                   throw 'register_error';
                 })
-  const Location = process.env['callbackURL']
+                
+  let Location = origin || process.env['defaultCallbackOrigin'];
+  
+  Location += `${process.env['callbackPath']}?id=${id}`;
                 
   context.succeed({ 
     id, 
