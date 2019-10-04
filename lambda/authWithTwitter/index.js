@@ -16,8 +16,7 @@ exports.handler = async (event, context) => {
   
   const oauth_secret = sessionData.Item.tokenSecret.S;
   const dateToDelete = sessionData.Item.dateToDelete.N;
-  const origin = sessionData.Item.origin.S;
-  
+
   if (dateToDelete - Math.floor(Date.now() / 1000) < 0) {
     throw 'session_is_expired';
   }
@@ -26,26 +25,21 @@ exports.handler = async (event, context) => {
   const cognito_id_promise = createId(token, secret);
   const twitter_info_promise = getTwitterUserInfo(token, secret);
   
-  const id = await Promise.all([cognito_id_promise, twitter_info_promise])
-                .then((values) => {
-                  const { IdentityId } = values[0];
-                  const { name, screen_name, profile_image_url_https } = values[1];
-                  
-                  return pushTwitterInfo(IdentityId, userId, name, screenName, profile_image_url_https);
-                })
-                .catch((err) => {
-                  console.log('Error', err, err.stack);
-                  throw 'register_error';
-                })
-                
-  let Location = origin || process.env['defaultCallbackOrigin'];
-  
-  Location += `${process.env['callbackPath']}?id=${id}`;
+  const data = await Promise.all([cognito_id_promise, twitter_info_promise])
+                      .then((values) => {
+                        const { IdentityId } = values[0];
+                        const { name, screen_name, profile_image_url_https } = values[1];
+                        
+                        return pushTwitterInfo(IdentityId, userId, name, screenName, profile_image_url_https);
+                      })
+                      .catch((err) => {
+                        console.log('Error', err, err.stack);
+                        throw 'register_error';
+                      })
                 
   context.succeed({ 
-    id, 
+    data, 
     Cookie: 'sessionId=deleted; Max-Age=-1',
-    Location,
   });
 };
 
@@ -159,7 +153,7 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl) => {
   .promise()
   .then(data => {
     if (Object.keys(data).length !== 0) {
-      return Promise.resolve(id);
+      return Promise.resolve({ id, twitterId, name, screenName, iconUrl });
     }
     
     const params = {
@@ -182,12 +176,9 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl) => {
         }
       }
     };
-    
-    console.log(params);
-    
     return ddb.putItem(params).promise();
   })
   .then(data => {
-    return id;  
+    return { id, twitterId, name, screenName, iconUrl };  
   });
 }
