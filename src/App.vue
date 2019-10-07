@@ -7,6 +7,9 @@
       <v-spacer></v-spacer>
       <v-label :dark="isDark">Dark Mode</v-label>
       <v-switch v-model="isDark" class="center-switch" :dark="isDark" id="dark-mode-switch"></v-switch>
+      <v-btn text @click="singinWithTwitter">
+        <v-icon>fa-twitter</v-icon>Sign in with Twitter
+      </v-btn>
     </v-app-bar>
 
     <v-content id="main">
@@ -39,6 +42,11 @@ export default class App extends Vue {
     localStorage.theme = isDark ? 'dark' : 'light';
     this.$vuetify.theme.dark = isDark;
     theme.setTheme(isDark ? 'dark' : 'light');
+  }
+
+  private singinWithTwitter() {
+    const url = 'https://api.memodon.com/v1/twitter/twitter-auth-page';
+    window.open(url, '_blank');
   }
 }
 </script>
