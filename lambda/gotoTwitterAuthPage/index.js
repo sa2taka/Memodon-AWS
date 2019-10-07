@@ -100,7 +100,7 @@ const generateSetCookieSentence = (sessionId) => {
 }
 
 const getOrigin = (referer) => {
-  if (!referer) {
+  if (!referer || referer === '') {
     return process.env['defaultCallbackOrigin'];
   }
   return new URL(referer).origin;

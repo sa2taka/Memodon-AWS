@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
                         const { IdentityId } = values[0];
                         const { name, screen_name, profile_image_url_https } = values[1];
                         
-                        return pushTwitterInfo(IdentityId, userId, name, screenName, profile_image_url_https);
+                        return pushTwitterInfo(IdentityId, userId, name, screenName, profile_image_url_https, token, secret);
                       })
                       .catch((err) => {
                         console.log('Error', err, err.stack);
@@ -138,7 +138,7 @@ const getTwitterUserInfo = (token, token_secret) => {
   })
 }
 
-const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl) => {
+const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl, token, secret) => {
   return ddb.getItem({
     TableName: 'MemodonUser',
     Key: {
@@ -153,7 +153,7 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl) => {
   .promise()
   .then(data => {
     if (Object.keys(data).length !== 0) {
-      return Promise.resolve({ id, twitterId, name, screenName, iconUrl });
+      return Promise.resolve({ id, twitterId, name, screenName, iconUrl, token, secret });
     }
     
     const params = {
@@ -173,12 +173,18 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl) => {
         },
         iconUrl: {
           S: iconUrl,
+        },
+        token: {
+          S: token,
+        },
+        secret: {
+          S: secret,
         }
       }
     };
     return ddb.putItem(params).promise();
   })
   .then(data => {
-    return { id, twitterId, name, screenName, iconUrl };  
+    return { id, twitterId, name, screenName, iconUrl, token, secret };  
   });
 }
