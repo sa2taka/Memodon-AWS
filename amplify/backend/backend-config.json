@@ -1,6 +1,6 @@
 {
 	"auth": {
-		"memodonecbd67ee": {
+		"memodon3688b20e": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": []

@@ -45,7 +45,7 @@ export default class App extends Vue {
   }
 
   private singinWithTwitter() {
-    const url = 'https://api.memodon.com/v1/twitter/twitter-auth-page';
+    const url = 'https://api.memodon.com/v1/twitter/auth-page';
     window.open(url, '_blank');
   }
 }

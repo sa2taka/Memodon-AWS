@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "memodonecbd67ee_identitypool_ecbd67ee",
+    "identityPoolName": "memodon3688b20e_identitypool_3688b20e",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "memodoecbd67ee",
-    "userPoolName": "memodonecbd67ee_userpool_ecbd67ee",
+    "resourceNameTruncated": "memodo3688b20e",
+    "userPoolName": "memodon3688b20e_userpool_3688b20e",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -17,9 +17,7 @@
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
-    "requiredAttributes": [
-        "email"
-    ],
+    "requiredAttributes": [],
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
@@ -28,9 +26,9 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "memodoecbd67ee_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "memodo3688b20e_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "resourceName": "memodonecbd67ee",
+    "resourceName": "memodon3688b20e",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -46,9 +44,14 @@
     },
     "useDefault": "defaultSocial",
     "hostedUI": true,
-    "hostedUIDomainName": "memodon",
+    "triggers": "{}",
+    "hostedUIDomainName": "memodon3688b20e-3688b20e",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://memodon.com/\"],\"LogoutURLs\":[\"https://memodon.com/\"]}",
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": [],
     "dependsOn": []
 }
