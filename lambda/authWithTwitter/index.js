@@ -42,6 +42,7 @@ exports.handler = async (event, context) => {
   context.succeed({ 
     data, 
     Cookie: 'sessionId=deleted; Max-Age=-1',
+    origin,
   });
 };
 
@@ -144,11 +145,11 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl, token, secret
   return ddb.getItem({
     TableName: 'MemodonUser',
     Key: {
-      id: {
+      cognitoId: {
         S: id,
       },
-      userId: {
-        S: twitterId.toString(),
+      dataType: {
+        S: 'owner',
       }
     }
   })
