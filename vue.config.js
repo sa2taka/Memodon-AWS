@@ -3,6 +3,7 @@ const globalSassFiles = ['@/sass/_veutify.scss'];
 module.exports = {
   devServer: {
     disableHostCheck: true,
+    host: 'localhost',
   },
   css: {
     loaderOptions: {
