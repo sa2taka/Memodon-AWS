@@ -161,8 +161,11 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl, token, secret
     const params = {
       TableName: 'MemodonUser',
       Item: {
-        id: {
+        cognitoId: {
           S: id,
+        },
+        dataType: {
+          S: 'owner',
         },
         userId: {
           S: 'twitter_' + twitterId.toString(),
