@@ -19,10 +19,6 @@ export default class SinginWithTwitter extends Vue {
 
     Logger.LOG_LEVEL = 0;
 
-    Auth.currentAuthenticatedUser().then((cred) => {
-      // console.log(cred);
-    });
-
     if (typeof preToken === 'string' && typeof verifier === 'string') {
       this.getToken(preToken, verifier)
         .then((response) => {
@@ -36,15 +32,12 @@ export default class SinginWithTwitter extends Vue {
             secret,
           } = response.data;
 
-          this.signin(token, secret, id, twitterId, screenName);
+          return this.signin(token, secret, id, twitterId, screenName);
         })
         .then((cred) => {
-          // If success, you will get the AWS credentials
-          // console.log(cred);
           return Auth.currentAuthenticatedUser();
         })
         .then((user) => {
-          // If success, the user object you passed in Auth.federatedSignIn
           // console.log(user);
         })
         .catch((e) => {
@@ -72,9 +65,7 @@ export default class SinginWithTwitter extends Vue {
       body,
     };
 
-    return fetch(url, postInit).then((response) =>
-      wrapper<SigninData>(response.json()),
-    );
+    return wrapper<SigninData>(fetch(url, postInit));
   }
 
   private signin(

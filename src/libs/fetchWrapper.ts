@@ -6,7 +6,6 @@ const fetchWrapper = <T>(task: Promise<Response>): Promise<T> => {
           response
             .json()
             .then((json) => {
-              // jsonが取得できた場合だけresolve
               resolve(json);
             })
             .catch((error) => {
