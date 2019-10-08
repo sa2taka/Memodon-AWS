@@ -18,6 +18,6 @@ export default new Router({
       path: '/signin/twitter',
       name: 'singinWithTwitter',
       component: SigninWithTwitter,
-    }
+    },
   ],
 });
