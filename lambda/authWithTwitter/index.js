@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const rp = require('request-promise');
 const qs = require('querystring');
+const URL = require('url').URL;
 
 AWS.config.update({region: 'ap-northeast-1'});
 
@@ -8,6 +9,7 @@ const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const ci = new AWS.CognitoIdentity({apiVersion: '2014-06-30'});
 
 exports.handler = async (event, context) => {
+  const origin = getOrigin(event.referer);
   const oauth_token = event.oauth_token;
   const oauth_verifier = event.oauth_verifier;
   
@@ -163,7 +165,7 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl, token, secret
           S: id,
         },
         userId: {
-          S: twitterId.toString(),
+          S: 'twitter_' + twitterId.toString(),
         },
         name: {
           S: name,
@@ -187,4 +189,11 @@ const pushTwitterInfo = (id, twitterId, name, screenName, iconUrl, token, secret
   .then(data => {
     return { id, twitterId, name, screenName, iconUrl, token, secret };  
   });
+}
+
+const getOrigin = (referer) => {
+  if (!referer || referer === '') {
+    return process.env['defaultCallbackOrigin'];
+  }
+  return new URL(referer).origin;
 }
