@@ -29,5 +29,24 @@
                 }
             }
         }
+    },
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "memodon-dev-20191009044100-authRole",
+            "UnauthRoleArn": "arn:aws:iam::876243670426:role/memodon-dev-20191009044100-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::876243670426:role/memodon-dev-20191009044100-authRole",
+            "Region": "ap-northeast-1",
+            "DeploymentBucketName": "memodon-dev-20191009044100-deployment",
+            "UnauthRoleName": "memodon-dev-20191009044100-unauthRole",
+            "StackName": "memodon-dev-20191009044100",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:876243670426:stack/memodon-dev-20191009044100/fe24e410-ea4e-11e9-8d10-0e0ff366987c"
+        },
+        "categories": {
+            "auth": {
+                "memodon3688b20e": {
+                    "hostedUIProviderCreds": "[]"
+                }
+            }
+        }
     }
 }
