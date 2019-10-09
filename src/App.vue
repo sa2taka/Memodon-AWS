@@ -8,7 +8,8 @@
       <v-label :dark="isDark">Dark Mode</v-label>
       <v-switch v-model="isDark" class="center-switch" :dark="isDark" id="dark-mode-switch"></v-switch>
       <v-btn text @click="singinWithTwitter">
-        <v-icon>fa-twitter</v-icon>Sign in with Twitter
+        <v-icon color="#1DA1F2" v-html="'$vuetify.icons.twitter'"></v-icon>
+        <p class="ml-1 my-auto">Sign in with Twitter</p>
       </v-btn>
     </v-app-bar>
 

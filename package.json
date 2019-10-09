@@ -27,7 +27,10 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.1",
+    "@types/graphql": "^14.5.0",
     "@types/jest": "^23.1.4",
+    "@types/node": "^12.7.12",
+    "@types/zen-observable": "^0.8.0",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-e2e-cypress": "^3.11.0",
     "@vue/cli-plugin-pwa": "^3.11.0",
