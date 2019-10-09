@@ -8,15 +8,15 @@ AWS.config.update({ region: 'ap-northeast-1' });
 const ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 const ci = new AWS.CognitoIdentity({ apiVersion: '2014-06-30' });
 
-exports.handler = async (event, context) => {
+exports.handler = async(event, context) => {
   const origin = getOrigin(event.referer);
-  const oauth_token = event.oauth_token;
-  const oauth_verifier = event.oauth_verifier;
+  const oauthToken = event.oauth_token;
+  const oauthVerifier = event.oauth_verifier;
 
   const sessionId = parseSessionId(event.Cookie);
   const sessionData = await pullSessionData(sessionId);
 
-  const oauth_secret = sessionData.Item.tokenSecret.S;
+  const oauthSecret = sessionData.Item.tokenSecret.S;
   const dateToDelete = sessionData.Item.dateToDelete.N;
 
   if (dateToDelete - Math.floor(Date.now() / 1000) < 0) {
@@ -24,10 +24,11 @@ exports.handler = async (event, context) => {
   }
 
   const { token, secret, userId, screenName } = await getAccessToken(
-    oauth_token,
-    oauth_secret,
-    oauth_verifier
+    oauthToken,
+    oauthSecret,
+    oauthVerifier,
   );
+
   const cognito_id_promise = createId(token, secret);
   const twitter_info_promise = getTwitterUserInfo(token, secret);
 
@@ -36,15 +37,15 @@ exports.handler = async (event, context) => {
       const { IdentityId } = values[0];
       const { name, screen_name, profile_image_url_https } = values[1];
 
-      return pushTwitterInfo(
-        IdentityId,
-        userId,
+      return Promise.resolve({
+        cognitoId: IdentityId,
+        ownerId: userId,
         name,
         screenName,
-        profile_image_url_https,
+        iconUrl: profile_image_url_https,
         token,
         secret
-      );
+      });
     })
     .catch((err) => {
       console.log('Error', err, err.stack);
@@ -62,7 +63,7 @@ const parseSessionId = (cookie) => {
   return cookie.match('sessionId=([^;]+)')[1];
 };
 
-const pullSessionData = async (sessionId) => {
+const pullSessionData = async(sessionId) => {
   const params = {
     TableName: 'Session',
     Key: {
@@ -81,7 +82,7 @@ const pullSessionData = async (sessionId) => {
     });
 };
 
-const getAccessToken = async (token, token_secret, verifier) => {
+const getAccessToken = async(token, token_secret, verifier) => {
   const consumer_key = process.env['ConsumerKey'];
   const consumer_secret = process.env['ConsumerSecret'];
 
@@ -154,77 +155,6 @@ const getTwitterUserInfo = (token, token_secret) => {
     },
     json: true,
   });
-};
-
-const pushTwitterInfo = (
-  id,
-  twitterId,
-  name,
-  screenName,
-  iconUrl,
-  token,
-  secret
-) => {
-  return ddb
-    .getItem({
-      TableName: 'MemodonUser',
-      Key: {
-        cognitoId: {
-          S: id,
-        },
-        dataType: {
-          S: 'owner',
-        },
-      },
-    })
-    .promise()
-    .then((data) => {
-      if (Object.keys(data).length !== 0) {
-        return Promise.resolve({
-          id,
-          twitterId,
-          name,
-          screenName,
-          iconUrl,
-          token,
-          secret,
-        });
-      }
-
-      const params = {
-        TableName: 'MemodonUser',
-        Item: {
-          cognitoId: {
-            S: id,
-          },
-          dataType: {
-            S: 'owner',
-          },
-          userId: {
-            S: 'twitter_' + twitterId.toString(),
-          },
-          name: {
-            S: name,
-          },
-          userName: {
-            S: screenName,
-          },
-          iconUrl: {
-            S: iconUrl,
-          },
-          token: {
-            S: token,
-          },
-          secret: {
-            S: secret,
-          },
-        },
-      };
-      return ddb.putItem(params).promise();
-    })
-    .then((data) => {
-      return { id, twitterId, name, screenName, iconUrl, token, secret };
-    });
 };
 
 const getOrigin = (referer) => {
