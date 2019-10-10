@@ -1,16 +1,70 @@
-type Blog @model {
+type User
+@model
+@auth(
+    rules: [
+      {allow: private, operations: [create, update, delete, read], provider: iam},
+    ])
+{
+  cognitoId: ID!
+  tiwtterId: String!
+  userName: String!
+  displayName: String!
+  iconUrl: AWSURL!
+  isPrivate: Boolean!
+  note: [Memo] @connection(name: "UserNote", sortField: "createdAt")
+  subUser: [SubUser] @connection(name: "SubUsers")
+}
+
+type SubUser 
+@model
+@auth(
+    rules: [
+      {allow: private, operations: [create, update, delete, read], provider: iam},
+    ])
+{
+  id: ID!
+  userName: String!
+  displayName: String!
+  iconUrl: AWSURL!
+  user: User! @connection(name: "SubUsers")
+}
+
+type Memo 
+@model
+@auth(
+    rules: [
+      {allow: private, operations: [create, update, delete, read], provider: iam},
+    ])
+@key(fields: ["id", "createdAt"]) 
+{
+  id: ID!
+  statusId: String!
+  user: User! @connection(name: "UserNote", sortField: "createdAt")
+  tags: [MemoTag] @connection(name: "MemoTags")
+  createdAt: AWSTimestamp!
+}
+
+type MemoTag 
+@model(queries: null) 
+@auth(
+    rules: [
+      {allow: private, operations: [create, update, delete, read], provider: iam},
+    ])
+{
+  id: ID!
+  memo: Memo! @connection(name: "MemoTags")
+  tag: Tag! @connection(name: "MemosTag")
+}
+
+type Tag 
+@model 
+@auth(
+    rules: [
+      {allow: private, operations: [create, update, delete, read], provider: iam},
+    ])
+@key(fields: ["id", "name"]) 
+{
   id: ID!
   name: String!
-  posts: [Post] @connection(name: "BlogPosts")
-}
-type Post @model {
-  id: ID!
-  title: String!
-  blog: Blog @connection(name: "BlogPosts")
-  comments: [Comment] @connection(name: "PostComments")
-}
-type Comment @model {
-  id: ID!
-  content: String
-  post: Post @connection(name: "PostComments")
+  memos: [MemoTag] @connection(name: "MemosTag")
 }
