@@ -29,30 +29,6 @@ export const getUser = `query GetUser($id: ID!) {
   }
 }
 `;
-export const listUsers = `query ListUsers(
-  $filter: ModelUserFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      cognitoId
-      tiwtterId
-      userName
-      displayName
-      iconUrl
-      isPrivate
-      note {
-        nextToken
-      }
-      subUser {
-        nextToken
-      }
-    }
-    nextToken
-  }
-}
-`;
 export const getSubUser = `query GetSubUser($id: ID!) {
   getSubUser(id: $id) {
     id

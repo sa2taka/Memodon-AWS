@@ -62,22 +62,6 @@ export type DeleteMemoInput = {
   createdAt: number,
 };
 
-export type CreateMemoTagInput = {
-  id?: string | null,
-  memoTagMemoId: string,
-  memoTagTagId: string,
-};
-
-export type UpdateMemoTagInput = {
-  id: string,
-  memoTagMemoId?: string | null,
-  memoTagTagId?: string | null,
-};
-
-export type DeleteMemoTagInput = {
-  id?: string | null,
-};
-
 export type CreateTagInput = {
   id: string,
   name: string,
@@ -93,16 +77,14 @@ export type DeleteTagInput = {
   name: string,
 };
 
-export type ModelUserFilterInput = {
-  cognitoId?: ModelIDFilterInput | null,
-  tiwtterId?: ModelStringFilterInput | null,
+export type ModelSubUserFilterInput = {
+  id?: ModelIDFilterInput | null,
   userName?: ModelStringFilterInput | null,
   displayName?: ModelStringFilterInput | null,
   iconUrl?: ModelStringFilterInput | null,
-  isPrivate?: ModelBooleanFilterInput | null,
-  and?: Array< ModelUserFilterInput | null > | null,
-  or?: Array< ModelUserFilterInput | null > | null,
-  not?: ModelUserFilterInput | null,
+  and?: Array< ModelSubUserFilterInput | null > | null,
+  or?: Array< ModelSubUserFilterInput | null > | null,
+  not?: ModelSubUserFilterInput | null,
 };
 
 export type ModelIDFilterInput = {
@@ -129,21 +111,6 @@ export type ModelStringFilterInput = {
   notContains?: string | null,
   between?: Array< string | null > | null,
   beginsWith?: string | null,
-};
-
-export type ModelBooleanFilterInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-};
-
-export type ModelSubUserFilterInput = {
-  id?: ModelIDFilterInput | null,
-  userName?: ModelStringFilterInput | null,
-  displayName?: ModelStringFilterInput | null,
-  iconUrl?: ModelStringFilterInput | null,
-  and?: Array< ModelSubUserFilterInput | null > | null,
-  or?: Array< ModelSubUserFilterInput | null > | null,
-  not?: ModelSubUserFilterInput | null,
 };
 
 export type ModelIntKeyConditionInput = {
@@ -518,123 +485,6 @@ export type DeleteMemoMutation = {
   } | null,
 };
 
-export type CreateMemoTagMutationVariables = {
-  input: CreateMemoTagInput,
-};
-
-export type CreateMemoTagMutation = {
-  createMemoTag:  {
-    __typename: "MemoTag",
-    id: string,
-    memo:  {
-      __typename: "Memo",
-      id: string,
-      statusId: string,
-      user:  {
-        __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-        isPrivate: boolean,
-      },
-      tags:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: number,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      name: string,
-      memos:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type UpdateMemoTagMutationVariables = {
-  input: UpdateMemoTagInput,
-};
-
-export type UpdateMemoTagMutation = {
-  updateMemoTag:  {
-    __typename: "MemoTag",
-    id: string,
-    memo:  {
-      __typename: "Memo",
-      id: string,
-      statusId: string,
-      user:  {
-        __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-        isPrivate: boolean,
-      },
-      tags:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: number,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      name: string,
-      memos:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type DeleteMemoTagMutationVariables = {
-  input: DeleteMemoTagInput,
-};
-
-export type DeleteMemoTagMutation = {
-  deleteMemoTag:  {
-    __typename: "MemoTag",
-    id: string,
-    memo:  {
-      __typename: "Memo",
-      id: string,
-      statusId: string,
-      user:  {
-        __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-        isPrivate: boolean,
-      },
-      tags:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: number,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      name: string,
-      memos:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
 export type CreateTagMutationVariables = {
   input: CreateTagInput,
 };
@@ -729,36 +579,6 @@ export type GetUserQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-  } | null,
-};
-
-export type ListUsersQueryVariables = {
-  filter?: ModelUserFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListUsersQuery = {
-  listUsers:  {
-    __typename: "ModelUserConnection",
-    items:  Array< {
-      __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
-      userName: string,
-      displayName: string,
-      iconUrl: string,
-      isPrivate: boolean,
-      note:  {
-        __typename: "ModelMemoConnection",
-        nextToken: string | null,
-      } | null,
-      subUser:  {
-        __typename: "ModelSubUserConnection",
-        nextToken: string | null,
-      } | null,
-    } | null > | null,
-    nextToken: string | null,
   } | null,
 };
 
@@ -942,186 +762,6 @@ export type ListTagsQuery = {
   } | null,
 };
 
-export type OnCreateUserSubscription = {
-  onCreateUser:  {
-    __typename: "User",
-    cognitoId: string,
-    tiwtterId: string,
-    userName: string,
-    displayName: string,
-    iconUrl: string,
-    isPrivate: boolean,
-    note:  {
-      __typename: "ModelMemoConnection",
-      items:  Array< {
-        __typename: "Memo",
-        id: string,
-        statusId: string,
-        createdAt: number,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    subUser:  {
-      __typename: "ModelSubUserConnection",
-      items:  Array< {
-        __typename: "SubUser",
-        id: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-  } | null,
-};
-
-export type OnUpdateUserSubscription = {
-  onUpdateUser:  {
-    __typename: "User",
-    cognitoId: string,
-    tiwtterId: string,
-    userName: string,
-    displayName: string,
-    iconUrl: string,
-    isPrivate: boolean,
-    note:  {
-      __typename: "ModelMemoConnection",
-      items:  Array< {
-        __typename: "Memo",
-        id: string,
-        statusId: string,
-        createdAt: number,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    subUser:  {
-      __typename: "ModelSubUserConnection",
-      items:  Array< {
-        __typename: "SubUser",
-        id: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-  } | null,
-};
-
-export type OnDeleteUserSubscription = {
-  onDeleteUser:  {
-    __typename: "User",
-    cognitoId: string,
-    tiwtterId: string,
-    userName: string,
-    displayName: string,
-    iconUrl: string,
-    isPrivate: boolean,
-    note:  {
-      __typename: "ModelMemoConnection",
-      items:  Array< {
-        __typename: "Memo",
-        id: string,
-        statusId: string,
-        createdAt: number,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    subUser:  {
-      __typename: "ModelSubUserConnection",
-      items:  Array< {
-        __typename: "SubUser",
-        id: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-  } | null,
-};
-
-export type OnCreateSubUserSubscription = {
-  onCreateSubUser:  {
-    __typename: "SubUser",
-    id: string,
-    userName: string,
-    displayName: string,
-    iconUrl: string,
-    user:  {
-      __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
-      userName: string,
-      displayName: string,
-      iconUrl: string,
-      isPrivate: boolean,
-      note:  {
-        __typename: "ModelMemoConnection",
-        nextToken: string | null,
-      } | null,
-      subUser:  {
-        __typename: "ModelSubUserConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type OnUpdateSubUserSubscription = {
-  onUpdateSubUser:  {
-    __typename: "SubUser",
-    id: string,
-    userName: string,
-    displayName: string,
-    iconUrl: string,
-    user:  {
-      __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
-      userName: string,
-      displayName: string,
-      iconUrl: string,
-      isPrivate: boolean,
-      note:  {
-        __typename: "ModelMemoConnection",
-        nextToken: string | null,
-      } | null,
-      subUser:  {
-        __typename: "ModelSubUserConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type OnDeleteSubUserSubscription = {
-  onDeleteSubUser:  {
-    __typename: "SubUser",
-    id: string,
-    userName: string,
-    displayName: string,
-    iconUrl: string,
-    user:  {
-      __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
-      userName: string,
-      displayName: string,
-      iconUrl: string,
-      isPrivate: boolean,
-      note:  {
-        __typename: "ModelMemoConnection",
-        nextToken: string | null,
-      } | null,
-      subUser:  {
-        __typename: "ModelSubUserConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
 export type OnCreateMemoSubscription = {
   onCreateMemo:  {
     __typename: "Memo",
@@ -1221,111 +861,6 @@ export type OnDeleteMemoSubscription = {
       nextToken: string | null,
     } | null,
     createdAt: number,
-  } | null,
-};
-
-export type OnCreateMemoTagSubscription = {
-  onCreateMemoTag:  {
-    __typename: "MemoTag",
-    id: string,
-    memo:  {
-      __typename: "Memo",
-      id: string,
-      statusId: string,
-      user:  {
-        __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-        isPrivate: boolean,
-      },
-      tags:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: number,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      name: string,
-      memos:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type OnUpdateMemoTagSubscription = {
-  onUpdateMemoTag:  {
-    __typename: "MemoTag",
-    id: string,
-    memo:  {
-      __typename: "Memo",
-      id: string,
-      statusId: string,
-      user:  {
-        __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-        isPrivate: boolean,
-      },
-      tags:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: number,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      name: string,
-      memos:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-    },
-  } | null,
-};
-
-export type OnDeleteMemoTagSubscription = {
-  onDeleteMemoTag:  {
-    __typename: "MemoTag",
-    id: string,
-    memo:  {
-      __typename: "Memo",
-      id: string,
-      statusId: string,
-      user:  {
-        __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
-        userName: string,
-        displayName: string,
-        iconUrl: string,
-        isPrivate: boolean,
-      },
-      tags:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: number,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      name: string,
-      memos:  {
-        __typename: "ModelMemoTagConnection",
-        nextToken: string | null,
-      } | null,
-    },
   } | null,
 };
 

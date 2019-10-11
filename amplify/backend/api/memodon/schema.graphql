@@ -1,5 +1,5 @@
 type User
-@model
+@model(queries: { get: "getUser" }, subscriptions: null)
 @auth(
     rules: [
       {allow: private, operations: [create, update, delete, read], provider: iam},
@@ -16,7 +16,7 @@ type User
 }
 
 type SubUser 
-@model
+@model(subscriptions: null)
 @auth(
     rules: [
       {allow: private, operations: [create, update, delete, read], provider: iam},
@@ -45,7 +45,7 @@ type Memo
 }
 
 type MemoTag 
-@model(queries: null) 
+@model(queries: null, mutations: null, subscriptions: null) 
 @auth(
     rules: [
       {allow: private, operations: [create, update, delete, read], provider: iam},
