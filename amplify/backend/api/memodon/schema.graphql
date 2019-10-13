@@ -1,27 +1,35 @@
 type User
-@model(queries: { get: "getUser" }, subscriptions: null)
-@auth(
+  @model(queries: { get: "getUser" }, subscriptions: null)
+  @auth(
     rules: [
-      {allow: private, operations: [create, update, delete, read], provider: iam},
-    ])
-{
+      {
+        allow: private
+        operations: [create, update, delete, read]
+        provider: iam
+      }
+    ]
+  ) {
   cognitoId: ID!
   tiwtterId: String!
   userName: String!
   displayName: String!
   iconUrl: AWSURL!
-  isPrivate: Boolean!
+  isPrivate: Boolean
   note: [Memo] @connection(name: "UserNote", sortField: "createdAt")
   subUser: [SubUser] @connection(name: "SubUsers")
 }
 
-type SubUser 
-@model(subscriptions: null)
-@auth(
+type SubUser
+  @model(subscriptions: null)
+  @auth(
     rules: [
-      {allow: private, operations: [create, update, delete, read], provider: iam},
-    ])
-{
+      {
+        allow: private
+        operations: [create, update, delete, read]
+        provider: iam
+      }
+    ]
+  ) {
   id: ID!
   userName: String!
   displayName: String!
@@ -29,14 +37,18 @@ type SubUser
   user: User! @connection(name: "SubUsers")
 }
 
-type Memo 
-@model
-@auth(
+type Memo
+  @model
+  @auth(
     rules: [
-      {allow: private, operations: [create, update, delete, read], provider: iam},
-    ])
-@key(fields: ["id", "createdAt"]) 
-{
+      {
+        allow: private
+        operations: [create, update, delete, read]
+        provider: iam
+      }
+    ]
+  )
+  @key(fields: ["id", "createdAt"]) {
   id: ID!
   statusId: String!
   user: User! @connection(name: "UserNote", sortField: "createdAt")
@@ -44,26 +56,34 @@ type Memo
   createdAt: AWSTimestamp!
 }
 
-type MemoTag 
-@model(queries: null, mutations: null, subscriptions: null) 
-@auth(
+type MemoTag
+  @model(queries: null, mutations: null, subscriptions: null)
+  @auth(
     rules: [
-      {allow: private, operations: [create, update, delete, read], provider: iam},
-    ])
-{
+      {
+        allow: private
+        operations: [create, update, delete, read]
+        provider: iam
+      }
+    ]
+  ) {
   id: ID!
   memo: Memo! @connection(name: "MemoTags")
   tag: Tag! @connection(name: "MemosTag")
 }
 
-type Tag 
-@model 
-@auth(
+type Tag
+  @model
+  @auth(
     rules: [
-      {allow: private, operations: [create, update, delete, read], provider: iam},
-    ])
-@key(fields: ["id", "name"]) 
-{
+      {
+        allow: private
+        operations: [create, update, delete, read]
+        provider: iam
+      }
+    ]
+  )
+  @key(fields: ["id", "name"]) {
   id: ID!
   name: String!
   memos: [MemoTag] @connection(name: "MemosTag")
