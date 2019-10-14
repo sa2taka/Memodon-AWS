@@ -11,6 +11,9 @@
         <v-icon color="#1DA1F2" v-html="'$vuetify.icons.twitter'"></v-icon>
         <p class="ml-1 my-auto">Sign in with Twitter</p>
       </v-btn>
+      <v-btn text @click="sighout">
+        <p class="ml-1 my-auto">Sign out</p>
+      </v-btn>
     </v-app-bar>
 
     <v-content id="main">
@@ -22,6 +25,8 @@
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import theme from '@/store/modules/theme';
+
+import { Auth } from 'aws-amplify';
 
 @Component
 export default class App extends Vue {
@@ -47,7 +52,13 @@ export default class App extends Vue {
 
   private singinWithTwitter() {
     const url = 'https://api.memodon.com/v1/twitter/auth-page';
-    window.open(url, '_blank');
+    location.href = url;
+  }
+
+  private sighout() {
+    Auth.signOut()
+      .then((data) => this.$forceUpdate())
+      .catch((err) => this.$forceUpdate());
   }
 }
 </script>
