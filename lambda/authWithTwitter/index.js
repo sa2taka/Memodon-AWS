@@ -2,13 +2,14 @@ const AWS = require('aws-sdk');
 const rp = require('request-promise');
 const qs = require('querystring');
 const URL = require('url').URL;
+let isDevEnv = undefined;
 
 AWS.config.update({ region: 'ap-northeast-1' });
 
 const ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 const ci = new AWS.CognitoIdentity({ apiVersion: '2014-06-30' });
 
-exports.handler = async(event, context) => {
+exports.handler = async (event, context) => {
   const origin = getOrigin(event.referer);
   const oauthToken = event.oauth_token;
   const oauthVerifier = event.oauth_verifier;
@@ -19,6 +20,8 @@ exports.handler = async(event, context) => {
   const oauthSecret = sessionData.Item.tokenSecret.S;
   const dateToDelete = sessionData.Item.dateToDelete.N;
 
+  isDevEnv = decideDevEnv(origin);
+
   if (dateToDelete - Math.floor(Date.now() / 1000) < 0) {
     throw 'session_is_expired';
   }
@@ -26,7 +29,7 @@ exports.handler = async(event, context) => {
   const { token, secret, userId, screenName } = await getAccessToken(
     oauthToken,
     oauthSecret,
-    oauthVerifier,
+    oauthVerifier
   );
 
   const cognito_id_promise = createId(token, secret);
@@ -44,7 +47,7 @@ exports.handler = async(event, context) => {
         screenName,
         iconUrl: profile_image_url_https,
         token,
-        secret
+        secret,
       });
     })
     .catch((err) => {
@@ -63,7 +66,7 @@ const parseSessionId = (cookie) => {
   return cookie.match('sessionId=([^;]+)')[1];
 };
 
-const pullSessionData = async(sessionId) => {
+const pullSessionData = async (sessionId) => {
   const params = {
     TableName: 'Session',
     Key: {
@@ -82,7 +85,7 @@ const pullSessionData = async(sessionId) => {
     });
 };
 
-const getAccessToken = async(token, token_secret, verifier) => {
+const getAccessToken = async (token, token_secret, verifier) => {
   const consumer_key = process.env['ConsumerKey'];
   const consumer_secret = process.env['ConsumerSecret'];
 
@@ -121,7 +124,9 @@ const parseAuthRes = (res) => {
 
 const createId = (token, secret) => {
   const params = {
-    IdentityPoolId: process.env['IdentityPoolId'],
+    IdentityPoolId: isDevEnv
+      ? process.env['DevIdentityPoolId']
+      : process.env['ProdIdentityPoolId'],
     Logins: {
       'api.twitter.com': `${token};${secret}`,
     },
@@ -162,4 +167,12 @@ const getOrigin = (referer) => {
     return process.env['defaultCallbackOrigin'];
   }
   return new URL(referer).origin;
+};
+
+const decideDevEnv = (origin) => {
+  if (origin === process.env['productionOrigin']) {
+    return false;
+  } else {
+    return true;
+  }
 };
