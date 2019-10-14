@@ -3,8 +3,8 @@
 
 export const getUser = `query GetUser($id: ID!) {
   getUser(id: $id) {
-    cognitoId
-    tiwtterId
+    id
+    twitterId
     userName
     displayName
     iconUrl
@@ -36,8 +36,8 @@ export const getSubUser = `query GetSubUser($id: ID!) {
     displayName
     iconUrl
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -64,8 +64,8 @@ export const listSubUsers = `query ListSubUsers(
       displayName
       iconUrl
       user {
-        cognitoId
-        tiwtterId
+        id
+        twitterId
         userName
         displayName
         iconUrl
@@ -81,8 +81,8 @@ export const getMemo = `query GetMemo($id: ID!, $createdAt: AWSTimestamp!) {
     id
     statusId
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -124,8 +124,8 @@ export const listMemos = `query ListMemos(
       id
       statusId
       user {
-        cognitoId
-        tiwtterId
+        id
+        twitterId
         userName
         displayName
         iconUrl

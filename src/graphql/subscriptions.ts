@@ -6,8 +6,8 @@ export const onCreateMemo = `subscription OnCreateMemo {
     id
     statusId
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -34,8 +34,8 @@ export const onUpdateMemo = `subscription OnUpdateMemo {
     id
     statusId
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -62,8 +62,8 @@ export const onDeleteMemo = `subscription OnDeleteMemo {
     id
     statusId
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl

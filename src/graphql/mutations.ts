@@ -3,8 +3,8 @@
 
 export const createUser = `mutation CreateUser($input: CreateUserInput!) {
   createUser(input: $input) {
-    cognitoId
-    tiwtterId
+    id
+    twitterId
     userName
     displayName
     iconUrl
@@ -31,8 +31,8 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
 `;
 export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
   updateUser(input: $input) {
-    cognitoId
-    tiwtterId
+    id
+    twitterId
     userName
     displayName
     iconUrl
@@ -59,8 +59,8 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
 `;
 export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
   deleteUser(input: $input) {
-    cognitoId
-    tiwtterId
+    id
+    twitterId
     userName
     displayName
     iconUrl
@@ -92,8 +92,8 @@ export const createSubUser = `mutation CreateSubUser($input: CreateSubUserInput!
     displayName
     iconUrl
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -115,8 +115,8 @@ export const updateSubUser = `mutation UpdateSubUser($input: UpdateSubUserInput!
     displayName
     iconUrl
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -138,8 +138,8 @@ export const deleteSubUser = `mutation DeleteSubUser($input: DeleteSubUserInput!
     displayName
     iconUrl
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -159,8 +159,8 @@ export const createMemo = `mutation CreateMemo($input: CreateMemoInput!) {
     id
     statusId
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -187,8 +187,8 @@ export const updateMemo = `mutation UpdateMemo($input: UpdateMemoInput!) {
     id
     statusId
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl
@@ -215,8 +215,8 @@ export const deleteMemo = `mutation DeleteMemo($input: DeleteMemoInput!) {
     id
     statusId
     user {
-      cognitoId
-      tiwtterId
+      id
+      twitterId
       userName
       displayName
       iconUrl

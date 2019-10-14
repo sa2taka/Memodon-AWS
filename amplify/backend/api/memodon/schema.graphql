@@ -9,8 +9,8 @@ type User
       }
     ]
   ) {
-  cognitoId: ID!
-  tiwtterId: String!
+  id: ID!
+  twitterId: String!
   userName: String!
   displayName: String!
   iconUrl: AWSURL!

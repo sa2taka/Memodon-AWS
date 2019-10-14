@@ -2,17 +2,17 @@
 //  This file was automatically generated and should not be edited.
 
 export type CreateUserInput = {
-  cognitoId: string,
-  tiwtterId: string,
+  id?: string | null,
+  twitterId: string,
   userName: string,
   displayName: string,
   iconUrl: string,
-  isPrivate: boolean,
+  isPrivate?: boolean | null,
 };
 
 export type UpdateUserInput = {
-  cognitoId?: string | null,
-  tiwtterId?: string | null,
+  id: string,
+  twitterId?: string | null,
   userName?: string | null,
   displayName?: string | null,
   iconUrl?: string | null,
@@ -174,12 +174,12 @@ export type CreateUserMutationVariables = {
 export type CreateUserMutation = {
   createUser:  {
     __typename: "User",
-    cognitoId: string,
-    tiwtterId: string,
+    id: string,
+    twitterId: string,
     userName: string,
     displayName: string,
     iconUrl: string,
-    isPrivate: boolean,
+    isPrivate: boolean | null,
     note:  {
       __typename: "ModelMemoConnection",
       items:  Array< {
@@ -211,12 +211,12 @@ export type UpdateUserMutationVariables = {
 export type UpdateUserMutation = {
   updateUser:  {
     __typename: "User",
-    cognitoId: string,
-    tiwtterId: string,
+    id: string,
+    twitterId: string,
     userName: string,
     displayName: string,
     iconUrl: string,
-    isPrivate: boolean,
+    isPrivate: boolean | null,
     note:  {
       __typename: "ModelMemoConnection",
       items:  Array< {
@@ -248,12 +248,12 @@ export type DeleteUserMutationVariables = {
 export type DeleteUserMutation = {
   deleteUser:  {
     __typename: "User",
-    cognitoId: string,
-    tiwtterId: string,
+    id: string,
+    twitterId: string,
     userName: string,
     displayName: string,
     iconUrl: string,
-    isPrivate: boolean,
+    isPrivate: boolean | null,
     note:  {
       __typename: "ModelMemoConnection",
       items:  Array< {
@@ -291,12 +291,12 @@ export type CreateSubUserMutation = {
     iconUrl: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -322,12 +322,12 @@ export type UpdateSubUserMutation = {
     iconUrl: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -353,12 +353,12 @@ export type DeleteSubUserMutation = {
     iconUrl: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -382,12 +382,12 @@ export type CreateMemoMutation = {
     statusId: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -420,12 +420,12 @@ export type UpdateMemoMutation = {
     statusId: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -458,12 +458,12 @@ export type DeleteMemoMutation = {
     statusId: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -552,12 +552,12 @@ export type GetUserQueryVariables = {
 export type GetUserQuery = {
   getUser:  {
     __typename: "User",
-    cognitoId: string,
-    tiwtterId: string,
+    id: string,
+    twitterId: string,
     userName: string,
     displayName: string,
     iconUrl: string,
-    isPrivate: boolean,
+    isPrivate: boolean | null,
     note:  {
       __typename: "ModelMemoConnection",
       items:  Array< {
@@ -595,12 +595,12 @@ export type GetSubUserQuery = {
     iconUrl: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -630,12 +630,12 @@ export type ListSubUsersQuery = {
       iconUrl: string,
       user:  {
         __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
+        id: string,
+        twitterId: string,
         userName: string,
         displayName: string,
         iconUrl: string,
-        isPrivate: boolean,
+        isPrivate: boolean | null,
       },
     } | null > | null,
     nextToken: string | null,
@@ -654,12 +654,12 @@ export type GetMemoQuery = {
     statusId: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -699,12 +699,12 @@ export type ListMemosQuery = {
       statusId: string,
       user:  {
         __typename: "User",
-        cognitoId: string,
-        tiwtterId: string,
+        id: string,
+        twitterId: string,
         userName: string,
         displayName: string,
         iconUrl: string,
-        isPrivate: boolean,
+        isPrivate: boolean | null,
       },
       tags:  {
         __typename: "ModelMemoTagConnection",
@@ -769,12 +769,12 @@ export type OnCreateMemoSubscription = {
     statusId: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -803,12 +803,12 @@ export type OnUpdateMemoSubscription = {
     statusId: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
@@ -837,12 +837,12 @@ export type OnDeleteMemoSubscription = {
     statusId: string,
     user:  {
       __typename: "User",
-      cognitoId: string,
-      tiwtterId: string,
+      id: string,
+      twitterId: string,
       userName: string,
       displayName: string,
       iconUrl: string,
-      isPrivate: boolean,
+      isPrivate: boolean | null,
       note:  {
         __typename: "ModelMemoConnection",
         nextToken: string | null,
