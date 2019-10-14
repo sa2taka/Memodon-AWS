@@ -1,7 +1,7 @@
 interface SinginData {
   data: {
     id: string;
-    twitterId: string;
+    ownerId: string;
     name: string;
     screenName: string;
     iconUrl: string;

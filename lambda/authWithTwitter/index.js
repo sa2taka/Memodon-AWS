@@ -2,6 +2,7 @@ const AWS = require('aws-sdk');
 const rp = require('request-promise');
 const qs = require('querystring');
 const URL = require('url').URL;
+let isDevEnv = undefined;
 
 AWS.config.update({ region: 'ap-northeast-1' });
 
@@ -10,24 +11,27 @@ const ci = new AWS.CognitoIdentity({ apiVersion: '2014-06-30' });
 
 exports.handler = async (event, context) => {
   const origin = getOrigin(event.referer);
-  const oauth_token = event.oauth_token;
-  const oauth_verifier = event.oauth_verifier;
+  const oauthToken = event.oauth_token;
+  const oauthVerifier = event.oauth_verifier;
 
   const sessionId = parseSessionId(event.Cookie);
   const sessionData = await pullSessionData(sessionId);
 
-  const oauth_secret = sessionData.Item.tokenSecret.S;
+  const oauthSecret = sessionData.Item.tokenSecret.S;
   const dateToDelete = sessionData.Item.dateToDelete.N;
+
+  isDevEnv = decideDevEnv(origin);
 
   if (dateToDelete - Math.floor(Date.now() / 1000) < 0) {
     throw 'session_is_expired';
   }
 
   const { token, secret, userId, screenName } = await getAccessToken(
-    oauth_token,
-    oauth_secret,
-    oauth_verifier
+    oauthToken,
+    oauthSecret,
+    oauthVerifier
   );
+
   const cognito_id_promise = createId(token, secret);
   const twitter_info_promise = getTwitterUserInfo(token, secret);
 
@@ -36,15 +40,15 @@ exports.handler = async (event, context) => {
       const { IdentityId } = values[0];
       const { name, screen_name, profile_image_url_https } = values[1];
 
-      return pushTwitterInfo(
-        IdentityId,
-        userId,
+      return Promise.resolve({
+        cognitoId: IdentityId,
+        ownerId: userId,
         name,
         screenName,
-        profile_image_url_https,
+        iconUrl: profile_image_url_https,
         token,
-        secret
-      );
+        secret,
+      });
     })
     .catch((err) => {
       console.log('Error', err, err.stack);
@@ -120,7 +124,9 @@ const parseAuthRes = (res) => {
 
 const createId = (token, secret) => {
   const params = {
-    IdentityPoolId: process.env['IdentityPoolId'],
+    IdentityPoolId: isDevEnv
+      ? process.env['DevIdentityPoolId']
+      : process.env['ProdIdentityPoolId'],
     Logins: {
       'api.twitter.com': `${token};${secret}`,
     },
@@ -156,80 +162,17 @@ const getTwitterUserInfo = (token, token_secret) => {
   });
 };
 
-const pushTwitterInfo = (
-  id,
-  twitterId,
-  name,
-  screenName,
-  iconUrl,
-  token,
-  secret
-) => {
-  return ddb
-    .getItem({
-      TableName: 'MemodonUser',
-      Key: {
-        cognitoId: {
-          S: id,
-        },
-        dataType: {
-          S: 'owner',
-        },
-      },
-    })
-    .promise()
-    .then((data) => {
-      if (Object.keys(data).length !== 0) {
-        return Promise.resolve({
-          id,
-          twitterId,
-          name,
-          screenName,
-          iconUrl,
-          token,
-          secret,
-        });
-      }
-
-      const params = {
-        TableName: 'MemodonUser',
-        Item: {
-          cognitoId: {
-            S: id,
-          },
-          dataType: {
-            S: 'owner',
-          },
-          userId: {
-            S: 'twitter_' + twitterId.toString(),
-          },
-          name: {
-            S: name,
-          },
-          userName: {
-            S: screenName,
-          },
-          iconUrl: {
-            S: iconUrl,
-          },
-          token: {
-            S: token,
-          },
-          secret: {
-            S: secret,
-          },
-        },
-      };
-      return ddb.putItem(params).promise();
-    })
-    .then((data) => {
-      return { id, twitterId, name, screenName, iconUrl, token, secret };
-    });
-};
-
 const getOrigin = (referer) => {
   if (!referer || referer === '') {
     return process.env['defaultCallbackOrigin'];
   }
   return new URL(referer).origin;
+};
+
+const decideDevEnv = (origin) => {
+  if (origin === process.env['productionOrigin']) {
+    return false;
+  } else {
+    return true;
+  }
 };
