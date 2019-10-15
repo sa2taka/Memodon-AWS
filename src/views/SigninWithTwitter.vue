@@ -1,5 +1,8 @@
 <template>
-  <div class="center">Singing in...</div>
+  <div class="center">
+    <loading :isComplete="isComplete"></loading>
+    Singing in...
+  </div>
 </template>
 
 <script lang="ts">
@@ -12,12 +15,19 @@ import User, { UserState } from '@/store/modules/user';
 import wrapper from '../libs/fetchWrapper';
 import SigninData from '../types/singinData';
 
-import MainTitle from '@/components/Home/MainTitle.vue';
+import Loading from '@/components/Atomic/Loading.vue';
+
 import { GRAPHQL_AUTH_MODE, GraphQLResult } from '@aws-amplify/api/lib/types';
 import { UserData } from 'aws-sdk/clients/sms';
 // It singin with twitter and close window.
-@Component
+@Component({
+  components: {
+    Loading,
+  },
+})
 export default class SinginWithTwitter extends Vue {
+  private isComplete = false;
+
   public created() {
     const preToken = this.$route.query.oauth_token;
     const verifier = this.$route.query.oauth_verifier;
@@ -25,6 +35,10 @@ export default class SinginWithTwitter extends Vue {
     let twitterIdInfo: string;
     let displayNameInfo: string;
     let iconUrlInfo: string;
+
+    setTimeout(() => {
+      this.isComplete = true;
+    }, 2000);
 
     if (typeof preToken === 'string' && typeof verifier === 'string') {
       this.getToken(preToken, verifier)
@@ -79,10 +93,10 @@ export default class SinginWithTwitter extends Vue {
           return this.setUserInfoToState(userInfo);
         })
         .then((data) => {
-          this.$router.push('/');
+          // this.$router.push('/');
         })
         .catch((e) => {
-          this.$router.push('/');
+          // this.$router.push('/');
         });
     }
   }
