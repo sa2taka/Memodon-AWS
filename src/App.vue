@@ -31,24 +31,25 @@ import { Auth } from 'aws-amplify';
 
 @Component
 export default class App extends Vue {
+
+  public get isSignin() {
+    return User.isSignin;
+  }
   public isDark: boolean = false;
 
   public created() {
-    if (localStorage.theme) {
-      this.isDark = localStorage.theme === 'dark';
-      this.setTheme(this.isDark);
-    }
-
-    if (User.isSignin) {
-      console.log(User.id);
-    } else {
-
-    }
+    this.updateTheme();
   }
 
   @Watch('isDark')
   public changedTheme(isDark: boolean) {
     this.setTheme(isDark);
+  }
+public updateTheme() {
+    if (localStorage.theme) {
+      this.isDark = localStorage.theme === 'dark';
+      this.setTheme(this.isDark);
+    }
   }
 
   private setTheme(isDark: boolean) {
@@ -64,8 +65,12 @@ export default class App extends Vue {
 
   private sighout() {
     Auth.signOut()
-      .then((data) => this.$forceUpdate())
-      .catch((err) => this.$forceUpdate());
+      .then((data) => {
+        this.$forceUpdate();
+      })
+      .catch((err) => {
+        this.$forceUpdate();
+      });
   }
 }
 </script>

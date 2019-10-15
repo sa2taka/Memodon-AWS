@@ -13,7 +13,7 @@ import wrapper from '../libs/fetchWrapper';
 import SigninData from '../types/singinData';
 
 import MainTitle from '@/components/Home/MainTitle.vue';
-import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api/lib/types';
+import { GRAPHQL_AUTH_MODE, GraphQLResult } from '@aws-amplify/api/lib/types';
 import { UserData } from 'aws-sdk/clients/sms';
 // It singin with twitter and close window.
 @Component
@@ -43,13 +43,20 @@ export default class SinginWithTwitter extends Vue {
           displayNameInfo = screenName;
           iconUrlInfo = iconUrl;
 
+          // To eliminate token and verifier
+          this.$router.replace('/signin/twitter');
+
           return this.signin(token, secret, id, ownerId, screenName);
         })
         .then((cred) => {
           return Auth.currentAuthenticatedUser();
         })
         .then(async (user) => {
-          const existedUser = await this.getUser(user.id);
+          const existedUser = await this.getUser(user.id) as {
+            data: {
+              getUser: UserState,
+            }
+          };
 
           if (existedUser.data.getUser) {
             return existedUser.data.getUser;
@@ -60,12 +67,18 @@ export default class SinginWithTwitter extends Vue {
             twitterIdInfo,
             displayNameInfo,
             iconUrlInfo
-          );
+          )  as {
+            data: {
+              createUser: UserState,
+            }
+          };
 
           return createdUser.data.createUser;
         })
-        .then((userInfo) => {
-          this.setUserInfoToState(userInfo);
+        .then(async (userInfo) => {
+          return this.setUserInfoToState(userInfo);
+        })
+        .then((data) => {
           this.$router.push('/');
         })
         .catch((e) => {
@@ -146,7 +159,7 @@ export default class SinginWithTwitter extends Vue {
   }
 
   private setUserInfoToState(data: UserState) {
-    return User.setInfo(data);
+    return User.setUser(data);
   }
 }
 </script>

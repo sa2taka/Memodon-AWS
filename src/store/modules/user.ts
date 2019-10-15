@@ -18,7 +18,7 @@ export interface UserState {
   isSignin: boolean;
 }
 
-@Module({ store, name: 'theme', namespaced: true })
+@Module({ dynamic: true, store, name: 'theme', namespaced: true })
 class User extends VuexModule implements UserState {
   public id: string = '';
   public twitterId: string = '';
@@ -38,12 +38,17 @@ class User extends VuexModule implements UserState {
   }
 
   @Action({ commit: 'setInfo' })
-  public async getUser(id: string) {
-    return await API.graphql({
+  public pullUser(id: string) {
+    return API.graphql({
       query: Queries.getUser,
       variables: { id },
     });
   }
+
+ @Action({ commit: 'setInfo' })
+ public setUser(data: UserState) {
+   return data;
+ }
 }
 
 const userModule = getModule(User);

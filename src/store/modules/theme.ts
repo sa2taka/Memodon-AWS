@@ -11,7 +11,7 @@ export interface ThemeState {
   theme: 'dark' | 'light';
 }
 
-@Module({ store, name: 'theme', namespaced: true })
+@Module({ dynamic: true, store, name: 'theme', namespaced: true })
 class Theme extends VuexModule implements ThemeState {
   public theme: 'dark' | 'light' = 'light';
 
