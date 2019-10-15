@@ -24,7 +24,8 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import theme from '@/store/modules/theme';
+import Theme from '@/store/modules/theme';
+import User from '@/store/modules/user';
 
 import { Auth } from 'aws-amplify';
 
@@ -37,6 +38,12 @@ export default class App extends Vue {
       this.isDark = localStorage.theme === 'dark';
       this.setTheme(this.isDark);
     }
+
+    if (User.isSignin) {
+      console.log(User.id);
+    } else {
+
+    }
   }
 
   @Watch('isDark')
@@ -47,7 +54,7 @@ export default class App extends Vue {
   private setTheme(isDark: boolean) {
     localStorage.theme = isDark ? 'dark' : 'light';
     this.$vuetify.theme.dark = isDark;
-    theme.setTheme(isDark ? 'dark' : 'light');
+    Theme.setTheme(isDark ? 'dark' : 'light');
   }
 
   private singinWithTwitter() {

@@ -7,12 +7,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import { API, Auth, graphqlOperation, Logger } from 'aws-amplify';
 import * as Queries from '@/graphql/queries';
 import * as Mutations from '@/graphql/mutations';
+import User, { UserState } from '@/store/modules/user';
 
 import wrapper from '../libs/fetchWrapper';
 import SigninData from '../types/singinData';
 
 import MainTitle from '@/components/Home/MainTitle.vue';
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api/lib/types';
+import { UserData } from 'aws-sdk/clients/sms';
 // It singin with twitter and close window.
 @Component
 export default class SinginWithTwitter extends Vue {
@@ -63,10 +65,11 @@ export default class SinginWithTwitter extends Vue {
           return createdUser.data.createUser;
         })
         .then((userInfo) => {
-          // TODO トップページに戻る
+          this.setUserInfoToState(userInfo);
+          this.$router.push('/');
         })
         .catch((e) => {
-          // TODO サインインに失敗したことを投げる
+          this.$router.push('/');
         });
     }
   }
@@ -140,6 +143,10 @@ export default class SinginWithTwitter extends Vue {
       variables: { input: userInfo },
       authMode: GRAPHQL_AUTH_MODE.AWS_IAM,
     });
+  }
+
+  private setUserInfoToState(data: UserState) {
+    return User.setInfo(data);
   }
 }
 </script>
