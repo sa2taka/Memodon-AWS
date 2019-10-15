@@ -31,7 +31,6 @@ import { Auth } from 'aws-amplify';
 
 @Component
 export default class App extends Vue {
-
   public get isSignin() {
     return User.isSignin;
   }
@@ -45,7 +44,8 @@ export default class App extends Vue {
   public changedTheme(isDark: boolean) {
     this.setTheme(isDark);
   }
-public updateTheme() {
+
+  public updateTheme() {
     if (localStorage.theme) {
       this.isDark = localStorage.theme === 'dark';
       this.setTheme(this.isDark);

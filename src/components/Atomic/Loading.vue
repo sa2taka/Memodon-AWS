@@ -1,10 +1,31 @@
 <template>
-  <div :class="[isComplete? 'complete' : 'spinner']">
-  	<svg viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-  		<rect v-if="isComplete" width="66" height="66" fill="none"/>
-  		<polyline v-if="isComplete" points="7 43 26 58 60 18" fill="none" stroke="#fff" stroke-linecap="square" stroke-miterlimit="10" stroke-width="6"/>
-  		<circle v-else class="length" fill="none" stroke-width="8" stroke-linecap="round" cx="33" cy="33" r="28"></circle>
-  	</svg>
+  <div
+    :class="[isComplete? 'complete' : 'spinner']"
+    :style="{ width: side + 'px', height: side + 'px' }"
+  >
+    <svg :viewBox="`0 0 ${side} ${side}`" xmlns="http://www.w3.org/2000/svg">
+      <rect v-if="isComplete" :width="side" :height="side" fill="none" />
+      <polyline
+        v-if="isComplete"
+        :points="checkmarkPath"
+        fill="none"
+        :stroke="color"
+        stroke-linecap="square"
+        stroke-miterlimit="10"
+        stroke-width="6"
+      />
+      <circle
+        v-else
+        class="length"
+        fill="none"
+        :stroke="color"
+        stroke-width="8"
+        stroke-linecap="round"
+        :cx="side / 2"
+        :cy="side / 2"
+        :r="side / 2 - 4"
+      />
+    </svg>
   </div>
 </template>
 
@@ -14,69 +35,70 @@ import theme from '@/store/modules/theme';
 
 @Component
 export default class Loading extends Vue {
-  @Prop()
+  @Prop({ default: 66 })
+  public side: number = 66;
+  @Prop({ default: false })
   public isComplete: boolean = false;
+  @Prop({ default: false })
+  public isError: boolean = false;
+  @Prop({ default: '#009688' })
+  public color: string = '#009688';
 
-  public get circle(): string {
-    return this.drawCircle(26, 33, 33).join(' ');
-  }
+  private get checkmarkPath() {
+    const p1x = 4;
+    const p1y = Math.round((5 / 8) * this.side);
+    const p2x = Math.round((3 / 8) * this.side);
+    const p2y = Math.round((7 / 8) * this.side);
+    const p3y = Math.round((1 / 4) * this.side);
+    const p3x = this.side - 4;
 
-  private drawCircle(r: number, centerX: number, centerY: number) {
-    return [
-      `M${centerX - r},${centerY}`,
-      `A${r},${r},0,1,0,${centerX + r},${centerY}`,
-      `A${r},${r},0,1,0,${centerX - r},${centerY}`,
-    ];
+    return `${p1x} ${p1y} ${p2x} ${p2y} ${p3x} ${p3y}`;
   }
 }
 </script>
 
 <style lang="scss" scoped>
-*, *:before, *:after {
-	box-sizing: border-box;
-	position: relative;
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  position: relative;
 }
 
 svg {
-	display: block;
-	
-	margin: 0; 
-	padding: 0;
-}
+  display: block;
 
-.spinner, .complete {
-	width: 66px; height: 66px;
+  margin: 0;
+  padding: 0;
 }
 
 .spinner {
-	animation: contanim 2.5s linear infinite;
+  animation: contanim 2.5s linear infinite;
 }
 
-$color: #84EBBD;
 $d: 175.6449737548828;
 
 svg {
-	width: 100%; 
-	height: 100%;
-	
-	left: 0; 
-	top: 0;
-	position: absolute;
-	
-	/*transform: rotate(-90deg);*/
+  width: 100%;
+  height: 100%;
 
-	 circle {
-		stroke: $color;
-		stroke-dasharray: 1, 300;
-		stroke-dashoffset: 0;
-			
-		animation: strokeanim 2.0s 0.2s ease infinite;
-		transform-origin: center center;
-	}
+  left: 0;
+  top: 0;
+  position: absolute;
+
+  /*transform: rotate(-90deg);*/
+
+  circle {
+    stroke-dasharray: 1, 300;
+    stroke-dashoffset: 0;
+
+    animation: strokeanim 2s 0.2s ease infinite;
+    transform-origin: center center;
+  }
 }
 
 @keyframes strokeanim {
-	0% {
+  0% {
     stroke-dasharray: 1, 300;
     stroke-dashoffset: 0;
   }
@@ -91,8 +113,8 @@ svg {
 }
 
 @keyframes contanim {
-	100% {
-		transform: rotate(360deg)
-	}
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
