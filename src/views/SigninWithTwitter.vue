@@ -1,7 +1,6 @@
 <template>
   <div class="center">
-    <loading :isComplete="isComplete"></loading>
-    Singing in...
+    <loading :isComplete="isComplete" :isError="isError"></loading>Singing in...
   </div>
 </template>
 
@@ -27,6 +26,7 @@ import { UserData } from 'aws-sdk/clients/sms';
 })
 export default class SinginWithTwitter extends Vue {
   private isComplete = false;
+  private isError = false;
 
   public created() {
     const preToken = this.$route.query.oauth_token;
@@ -37,7 +37,7 @@ export default class SinginWithTwitter extends Vue {
     let iconUrlInfo: string;
 
     setTimeout(() => {
-      this.isComplete = true;
+      this.isError = true;
     }, 2000);
 
     if (typeof preToken === 'string' && typeof verifier === 'string') {
@@ -66,25 +66,25 @@ export default class SinginWithTwitter extends Vue {
           return Auth.currentAuthenticatedUser();
         })
         .then(async (user) => {
-          const existedUser = await this.getUser(user.id) as {
+          const existedUser = (await this.getUser(user.id)) as {
             data: {
-              getUser: UserState,
-            }
+              getUser: UserState;
+            };
           };
 
           if (existedUser.data.getUser) {
             return existedUser.data.getUser;
           }
 
-          const createdUser = await this.pushUserToDatabase(
+          const createdUser = (await this.pushUserToDatabase(
             user,
             twitterIdInfo,
             displayNameInfo,
             iconUrlInfo
-          )  as {
+          )) as {
             data: {
-              createUser: UserState,
-            }
+              createUser: UserState;
+            };
           };
 
           return createdUser.data.createUser;
