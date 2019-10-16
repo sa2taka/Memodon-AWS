@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="290">
-      <v-card>
+      <v-card class="message-card">
         <!-- pb-4 adjusts bottom margin to equal top margin -->
         <v-card-title class="headline pb-4" justify="center">
           <loading
@@ -9,29 +9,66 @@
             :isError="isError"
             :side="side"
           ></loading>
-          <p class="ml-4 my-auto">Singing in...</p>
+          <p class="ml-4 my-auto">Signing in...</p>
         </v-card-title>
-        <div v-if="!isComplete && isError">
+
+        <div>
           <v-card-text>
-            <p v-if="reason === 'auth_error'">
-              We're sorry, but something error occured processing the singin.<br>
-              Please retry.
-            </p>
-            <p v-if="reason === 'timeout'">
-              Timeout occured processing the signin.<br>
-              Please retry.
-            </p>
-            <p v-if="reason === 'invalid_access'">
-              Invalid access.<br>
-              Go to "Sign in with Twitter" if you want to signin.
-            </p>
+            <span class="text-wrapper" v-show="isComplete" style="height: 66px">
+              <span class="line line1"></span>
+              <span class="letters letters-left">Welcome</span>
+              <span class="letters to">to</span>
+              <span class="letters letters-right">Memodon</span>
+              <span class="line line2"></span>
+            </span>
+            <transition name="error-message">
+              <p
+                v-if="!isComplete && isError && reason === 'auth_error'"
+                style="height: 66px"
+              >
+                We're sorry, but something error occured processing the
+                singin.<br />
+                Please retry.
+              </p>
+            </transition>
+            <transition name="error-message">
+              <p
+                v-if="!isComplete && isError && reason === 'timeout'"
+                style="height: 66px"
+              >
+                Timeout occured processing the signin.<br />
+                Please retry.
+              </p>
+              <p
+                v-if="!isComplete && isError && reason === 'invalid_access'"
+                style="height: 66px"
+              >
+                Invalid access.<br />
+                Go to "Sign in with Twitter" if you want to signin.
+              </p>
+            </transition>
+            <!-- empty padding -->
+            <p v-if="!isComplete && !isError" style="height: 66px"></p>
           </v-card-text>
 
-          <v-divider>
-            <v-btn primary text @click="returnTopPage">Sure</v-btn>
-          </v-divider>
+          <v-divider></v-divider>
 
-          <v-card-actions></v-card-actions>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <transition name="error-button">
+              <v-btn
+                class="font-weight-bold"
+                color="primary"
+                text
+                large
+                @click="returnTopPage"
+                v-if="!isComplete && isError"
+                >Sure</v-btn
+              >
+            </transition>
+            <!-- empty padding -->
+            <p v-if="!isError" style="height: 28px"></p>
+          </v-card-actions>
         </div>
       </v-card>
     </v-dialog>
@@ -47,6 +84,8 @@ import User, { UserState } from '@/store/modules/user';
 
 import wrapper from '../libs/fetchWrapper';
 import SigninData from '../types/singinData';
+
+import anime from 'animejs';
 
 import Loading from '@/components/Atomic/Loading.vue';
 
@@ -65,15 +104,14 @@ export default class SinginWithTwitter extends Vue {
 
   private dialog = true;
 
-  private reason: 'timeout' | 'auth_error' | 'invalid_access' =
-    'auth_error';
+  private reason: 'timeout' | 'auth_error' | 'invalid_access' = 'auth_error';
 
   public created() {
     const preToken = this.$route.query.oauth_token;
     const verifier = this.$route.query.oauth_verifier;
 
     setTimeout(() => {
-      if (!isError) {
+      if (!this.isError) {
         this.reason = 'timeout';
         this.isError = true;
       }
@@ -82,8 +120,9 @@ export default class SinginWithTwitter extends Vue {
     if (typeof preToken === 'string' && typeof verifier === 'string') {
       this.signinFlow(preToken, verifier);
     } else {
-      this.isError = true;
+      this.isComplete = true;
       this.reason = 'invalid_access';
+      this.runAnime();
       return;
     }
   }
@@ -146,11 +185,12 @@ export default class SinginWithTwitter extends Vue {
       })
       .then((data) => {
         this.isComplete = true;
-        setTimeout( () => {
+        this.runAnime();
+        setTimeout(() => {
           this.returnTopPage();
-        }, 3 * 1000);
+        }, 1 * 1000);
       })
-      .catch ((e) => {
+      .catch((e) => {
         this.isError = true;
         this.reason = 'auth_error';
       });
@@ -234,5 +274,97 @@ export default class SinginWithTwitter extends Vue {
   private returnTopPage() {
     this.$router.push('/');
   }
+
+  private runAnime() {
+    const a = anime
+      .timeline({ loop: true })
+      .add({
+        targets: '.line',
+        opacity: [0.5, 1],
+        scaleX: [0, 1],
+        easing: 'easeInOutExpo',
+        duration: 700,
+      })
+      .add({
+        targets: '.line',
+        duration: 600,
+        easing: 'easeOutExpo',
+        translateY: (_: Element, i: number) => -0.625 + 0.625 * 2 * i + 'em',
+      })
+      .add({
+        targets: '.to',
+        opacity: [0, 1],
+        scaleY: [0.5, 1],
+        easing: 'easeOutExpo',
+        duration: 600,
+        offset: '-=600',
+      })
+      .add({
+        targets: '.letters-left',
+        opacity: [0, 1],
+        translateX: ['0.5em', 0],
+        easing: 'easeOutExpo',
+        duration: 600,
+        offset: '-=300',
+      })
+      .add({
+        targets: '.letters-right',
+        opacity: [0, 1],
+        translateX: ['-0.5em', 0],
+        easing: 'easeOutExpo',
+        duration: 600,
+        offset: '-=600',
+      });
+
+    a.play();
+  }
 }
 </script>
+
+<style lang="scss">
+.error-message-enter-active,
+.error-button-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.error-button-enter,
+.error-message-enter {
+  opacity: 0;
+}
+
+.error-message-enter {
+  transform: translateX(-20px);
+}
+
+.text-wrapper {
+  position: relative;
+  display: inline-block;
+  padding-top: 0.1em;
+  padding-right: 0.05em;
+  padding-bottom: 0.15em;
+  line-height: 1em;
+}
+
+.line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 3px;
+  width: 100%;
+  transform-origin: 0.5 0;
+}
+
+.to {
+  margin-right: -0.1em;
+  margin-left: -0.1em;
+  font-size: 16px;
+}
+
+.letters {
+  display: inline-block;
+  opacity: 0;
+  font-size: 26px;
+}
+</style>

@@ -166,13 +166,15 @@ svg {
   }
 }
 
+.loading-leave-active,
+.checkmark-enter-active,
 .error-enter-active {
   transition: all 0.5s cubic-bezier(0.03, 1.04, 0.89, 1.31);
 }
 
 .loading-leave-active,
 .checkmark-enter-active {
-  transition: all 0.5s 0.5s cubic-bezier(0.03, 1.04, 0.89, 1.31);
+  transition-delay: -0.5s;
 }
 
 .loading-leave-to,
