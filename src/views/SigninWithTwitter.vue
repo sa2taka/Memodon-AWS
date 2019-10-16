@@ -37,8 +37,8 @@ export default class SinginWithTwitter extends Vue {
     let iconUrlInfo: string;
 
     setTimeout(() => {
-      this.isError = true;
-    }, 2000);
+      this.isComplete = true;
+    }, 5000);
 
     if (typeof preToken === 'string' && typeof verifier === 'string') {
       this.getToken(preToken, verifier)
