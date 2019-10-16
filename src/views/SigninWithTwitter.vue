@@ -11,6 +11,28 @@
           ></loading>
           <p class="ml-4 my-auto">Singing in...</p>
         </v-card-title>
+        <div v-if="!isComplete && isError">
+          <v-card-text>
+            <p v-if="reason === 'auth_error'">
+              We're sorry, but something error occured processing the singin.<br>
+              Please retry.
+            </p>
+            <p v-if="reason === 'timeout'">
+              Timeout occured processing the signin.<br>
+              Please retry.
+            </p>
+            <p v-if="reason === 'invalid_access'">
+              Invalid access.<br>
+              Go to "Sign in with Twitter" if you want to signin.
+            </p>
+          </v-card-text>
+
+          <v-divider>
+            <v-btn primary text @click="returnTopPage">Sure</v-btn>
+          </v-divider>
+
+          <v-card-actions></v-card-actions>
+        </div>
       </v-card>
     </v-dialog>
   </v-row>
@@ -43,7 +65,7 @@ export default class SinginWithTwitter extends Vue {
 
   private dialog = true;
 
-  private reason: 'timeout' | 'auth_error' | 'unauthorized_access' =
+  private reason: 'timeout' | 'auth_error' | 'invalid_access' =
     'auth_error';
 
   public created() {
@@ -51,15 +73,17 @@ export default class SinginWithTwitter extends Vue {
     const verifier = this.$route.query.oauth_verifier;
 
     setTimeout(() => {
-      this.reason = 'timeout';
-      this.isError = true;
-    }, 5 * 1000);
+      if (!isError) {
+        this.reason = 'timeout';
+        this.isError = true;
+      }
+    }, 30 * 1000);
 
     if (typeof preToken === 'string' && typeof verifier === 'string') {
       this.signinFlow(preToken, verifier);
     } else {
       this.isError = true;
-      this.reason = 'unauthorized_access';
+      this.reason = 'invalid_access';
       return;
     }
   }
@@ -122,12 +146,13 @@ export default class SinginWithTwitter extends Vue {
       })
       .then((data) => {
         this.isComplete = true;
-        // this.$router.push('/');
+        setTimeout( () => {
+          this.returnTopPage();
+        }, 3 * 1000);
       })
-      .catch((e) => {
+      .catch ((e) => {
         this.isError = true;
         this.reason = 'auth_error';
-        // this.$router.push('/');
       });
   }
 
@@ -204,6 +229,10 @@ export default class SinginWithTwitter extends Vue {
 
   private setUserInfoToState(data: UserState) {
     return User.setUser(data);
+  }
+
+  private returnTopPage() {
+    this.$router.push('/');
   }
 }
 </script>
