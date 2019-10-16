@@ -10,15 +10,15 @@
         v-if="isComplete"
         class="icon"
       >
-          <rect :width="side" :height="side" fill="none" />
-          <polyline
-            :points="checkmarkPath"
-            fill="none"
-            :stroke="color"
-            stroke-linecap="square"
-            stroke-miterlimit="10"
-            stroke-width="6"
-          />
+        <rect :width="side" :height="side" fill="none" />
+        <polyline
+          :points="checkmarkPath"
+          fill="none"
+          :stroke="color"
+          stroke-linecap="square"
+          stroke-miterlimit="10"
+          :stroke-width="side / 9"
+        />
       </svg>
     </transition>
 
@@ -51,10 +51,10 @@
         </g>
       </svg>
     </transition>
-    
+
     <transition name="loading">
       <svg
-        :viewBox="`0 0 ${side} ${side}`"
+        :viewBox="`0 0 66 66`"
         xmlns="http://www.w3.org/2000/svg"
         v-if="!isError && !isComplete"
         class="icon"
@@ -65,9 +65,9 @@
           :stroke="color"
           stroke-width="8"
           stroke-linecap="round"
-          :cx="side / 2"
-          :cy="side / 2"
-          :r="side / 2 - 4"
+          cx="33"
+          cy="33"
+          r="28"
         />
       </svg>
     </transition>
@@ -81,13 +81,13 @@ import theme from '@/store/modules/theme';
 @Component
 export default class Loading extends Vue {
   @Prop({ default: 66 })
-  public side: number = 66;
+  public side!: number;
   @Prop({ default: false })
-  public isComplete: boolean = false;
+  public isComplete!: boolean;
   @Prop({ default: false })
-  public isError: boolean = false;
+  public isError!: boolean;
   @Prop({ default: '#009688' })
-  public color: string = '#009688';
+  public color!: string;
 
   private get checkmarkPath() {
     const p1x = 4;
@@ -121,7 +121,7 @@ svg {
   animation: contanim 2.5s linear infinite;
 }
 
-$d: 175.6449737548828;
+$d: 165.6449737548828;
 
 svg {
   width: 100%;
@@ -134,10 +134,10 @@ svg {
   /*transform: rotate(-90deg);*/
 
   circle {
-    stroke-dasharray: 1, 300;
+    stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
 
-    animation: strokeanim 2s 0.2s ease infinite;
+    animation: strokeanim 2.5s 0.2s ease infinite;
   }
 }
 
@@ -147,15 +147,15 @@ svg {
 
 @keyframes strokeanim {
   0% {
-    stroke-dasharray: 1, 300;
+    stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
   }
   50% {
-    stroke-dasharray: 120, 300;
+    stroke-dasharray: 90, 200;
     stroke-dashoffset: -$d / 3;
   }
   100% {
-    stroke-dasharray: 120, 300;
+    stroke-dasharray: 90, 200;
     stroke-dashoffset: -$d;
   }
 }
@@ -166,10 +166,13 @@ svg {
   }
 }
 
-.loading-leave-active,
-.checkmark-enter-active,
 .error-enter-active {
-  transition: all .5s cubic-bezier(0.03, 1.04, 0.89, 1.31);
+  transition: all 0.5s cubic-bezier(0.03, 1.04, 0.89, 1.31);
+}
+
+.loading-leave-active,
+.checkmark-enter-active {
+  transition: all 0.5s 0.5s cubic-bezier(0.03, 1.04, 0.89, 1.31);
 }
 
 .loading-leave-to,
@@ -178,7 +181,7 @@ svg {
   transform: scale(0);
 }
 
-.loading-leave-to { 
-  opacity: 0; 
+.loading-leave-to {
+  opacity: 0;
 }
 </style>

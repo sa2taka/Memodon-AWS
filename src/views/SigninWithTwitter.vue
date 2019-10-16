@@ -1,7 +1,19 @@
 <template>
-  <div class="center">
-    <loading :isComplete="isComplete" :isError="isError"></loading>Singing in...
-  </div>
+  <v-row justify="center">
+    <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card>
+        <!-- pb-4 adjusts bottom margin to equal top margin -->
+        <v-card-title class="headline pb-4" justify="center">
+          <loading
+            :isComplete="isComplete"
+            :isError="isError"
+            :side="side"
+          ></loading>
+          <p class="ml-4 my-auto">Singing in...</p>
+        </v-card-title>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -27,78 +39,96 @@ import { UserData } from 'aws-sdk/clients/sms';
 export default class SinginWithTwitter extends Vue {
   private isComplete = false;
   private isError = false;
+  private side = 42;
+
+  private dialog = true;
+
+  private reason: 'timeout' | 'auth_error' | 'unauthorized_access' =
+    'auth_error';
 
   public created() {
     const preToken = this.$route.query.oauth_token;
     const verifier = this.$route.query.oauth_verifier;
 
+    setTimeout(() => {
+      this.reason = 'timeout';
+      this.isError = true;
+    }, 5 * 1000);
+
+    if (typeof preToken === 'string' && typeof verifier === 'string') {
+      this.signinFlow(preToken, verifier);
+    } else {
+      this.isError = true;
+      this.reason = 'unauthorized_access';
+      return;
+    }
+  }
+
+  private signinFlow(preToken: string, verifier: string) {
     let twitterIdInfo: string;
     let displayNameInfo: string;
     let iconUrlInfo: string;
 
-    setTimeout(() => {
-      this.isComplete = true;
-    }, 5000);
+    this.getToken(preToken, verifier)
+      .then((response) => {
+        const {
+          id,
+          ownerId,
+          name,
+          screenName,
+          iconUrl,
+          token,
+          secret,
+        } = response.data;
 
-    if (typeof preToken === 'string' && typeof verifier === 'string') {
-      this.getToken(preToken, verifier)
-        .then((response) => {
-          const {
-            id,
-            ownerId,
-            name,
-            screenName,
-            iconUrl,
-            token,
-            secret,
-          } = response.data;
+        twitterIdInfo = ownerId;
+        displayNameInfo = screenName;
+        iconUrlInfo = iconUrl;
 
-          twitterIdInfo = ownerId;
-          displayNameInfo = screenName;
-          iconUrlInfo = iconUrl;
+        // To eliminate token and verifier
+        this.$router.replace('/signin/twitter');
 
-          // To eliminate token and verifier
-          this.$router.replace('/signin/twitter');
-
-          return this.signin(token, secret, id, ownerId, screenName);
-        })
-        .then((cred) => {
-          return Auth.currentAuthenticatedUser();
-        })
-        .then(async (user) => {
-          const existedUser = (await this.getUser(user.id)) as {
-            data: {
-              getUser: UserState;
-            };
+        return this.signin(token, secret, id, ownerId, screenName);
+      })
+      .then((cred) => {
+        return Auth.currentAuthenticatedUser();
+      })
+      .then(async (user) => {
+        const existedUser = (await this.getUser(user.id)) as {
+          data: {
+            getUser: UserState;
           };
+        };
 
-          if (existedUser.data.getUser) {
-            return existedUser.data.getUser;
-          }
+        if (existedUser.data.getUser) {
+          return existedUser.data.getUser;
+        }
 
-          const createdUser = (await this.pushUserToDatabase(
-            user,
-            twitterIdInfo,
-            displayNameInfo,
-            iconUrlInfo
-          )) as {
-            data: {
-              createUser: UserState;
-            };
+        const createdUser = (await this.pushUserToDatabase(
+          user,
+          twitterIdInfo,
+          displayNameInfo,
+          iconUrlInfo
+        )) as {
+          data: {
+            createUser: UserState;
           };
+        };
 
-          return createdUser.data.createUser;
-        })
-        .then(async (userInfo) => {
-          return this.setUserInfoToState(userInfo);
-        })
-        .then((data) => {
-          // this.$router.push('/');
-        })
-        .catch((e) => {
-          // this.$router.push('/');
-        });
-    }
+        return createdUser.data.createUser;
+      })
+      .then(async (userInfo) => {
+        return this.setUserInfoToState(userInfo);
+      })
+      .then((data) => {
+        this.isComplete = true;
+        // this.$router.push('/');
+      })
+      .catch((e) => {
+        this.isError = true;
+        this.reason = 'auth_error';
+        // this.$router.push('/');
+      });
   }
 
   private getToken(
