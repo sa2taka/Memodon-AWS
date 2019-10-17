@@ -32,13 +32,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import theme from '@/store/modules/theme';
+import { Component, Watch, Vue } from 'vue-property-decorator';
+import themeState from '@/store/modules/theme';
 
 @Component
 export default class MainTitle extends Vue {
-  get theme(): string {
-    return theme.theme;
+  private theme: 'dark' | 'light' = 'light';
+
+  public created() {
+    this.theme = themeState.theme;
+
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'theme/setTheme') {
+        this.theme = mutation.payload;
+      }
+    });
   }
 }
 </script>
