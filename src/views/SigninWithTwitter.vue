@@ -15,11 +15,10 @@
         <div>
           <v-card-text>
             <span class="text-wrapper" v-show="isComplete" style="height: 66px">
-              <span class="line line1"></span>
-              <span class="letters letters-left">Welcome</span>
-              <span class="letters to">to</span>
-              <span class="letters letters-right">Memodon</span>
-              <span class="line line2"></span>
+              <div class="mx-auto">
+                <div class="letters">Welcome to Memodon</div>
+                <span class="line"></span>
+              </div>
             </span>
             <transition name="error-message">
               <p
@@ -97,6 +96,9 @@ import Loading from '@/components/Atomic/Loading.vue';
 
 import { GRAPHQL_AUTH_MODE, GraphQLResult } from '@aws-amplify/api/lib/types';
 import { UserData } from 'aws-sdk/clients/sms';
+
+import theme from '@/store/modules/theme';
+
 // It singin with twitter and close window.
 @Component({
   components: {
@@ -116,7 +118,7 @@ export default class SinginWithTwitter extends Vue {
     | 'invalid_access'
     | 'already_singed' = 'auth_error';
 
-  public created() {
+  public async created() {
     const preToken = this.$route.query.oauth_token;
     const verifier = this.$route.query.oauth_verifier;
 
@@ -293,47 +295,38 @@ export default class SinginWithTwitter extends Vue {
   }
 
   private runAnime() {
+    const textWrapper: Element | null = document.querySelector('.letters');
+
+    if (textWrapper !== null && textWrapper.textContent !== null) {
+      textWrapper.innerHTML = textWrapper.textContent.replace(
+        /\S/g,
+        '<span class="letter">$&</span>'
+      );
+    }
+
     const a = anime
-      .timeline({ loop: true })
+      .timeline()
       .add({
         targets: '.line',
         opacity: [0.5, 1],
         scaleX: [0, 1],
         easing: 'easeInOutExpo',
-        duration: 700,
+        duration: 600,
       })
       .add({
-        targets: '.line',
-        duration: 600,
-        easing: 'easeOutExpo',
-        translateY: (_: Element, i: number) => -0.625 + 0.625 * 2 * i + 'em',
-      })
-      .add({
-        targets: '.to',
-        opacity: [0, 1],
-        scaleY: [0.5, 1],
-        easing: 'easeOutExpo',
-        duration: 600,
-        offset: '-=600',
-      })
-      .add({
-        targets: '.letters-left',
-        opacity: [0, 1],
-        translateX: ['0.5em', 0],
-        easing: 'easeOutExpo',
-        duration: 600,
-        offset: '-=300',
-      })
-      .add({
-        targets: '.letters-right',
-        opacity: [0, 1],
-        translateX: ['-0.5em', 0],
-        easing: 'easeOutExpo',
-        duration: 600,
-        offset: '-=600',
+        targets: '.letter',
+        translateY: ['1.1em', 0],
+        translateZ: 0,
+        opacity: 1,
+        duration: 450,
+        delay: (el: Element, i: number) => 25 * i,
       });
 
     a.play();
+  }
+
+  private get theme(): string {
+    return theme.theme;
   }
 }
 </script>
@@ -355,33 +348,42 @@ export default class SinginWithTwitter extends Vue {
 
 .text-wrapper {
   position: relative;
-  display: inline-block;
   padding-top: 0.1em;
   padding-right: 0.05em;
   padding-bottom: 0.15em;
   line-height: 1em;
+
+  width: 100%;
+  display: flex;
+  justify-content: around-space;
 }
 
 .line {
   position: absolute;
+  background-color: var(--v-primary-base);
   left: 0;
   top: 0;
   bottom: 0;
   margin: auto;
-  height: 3px;
+  height: 2px;
   width: 100%;
   transform-origin: 0.5 0;
-}
-
-.to {
-  margin-right: -0.1em;
-  margin-left: -0.1em;
-  font-size: 16px;
+  top: -1em;
 }
 
 .letters {
-  display: inline-block;
-  opacity: 0;
-  font-size: 26px;
+  $translate: 14px;
+  
+  height: 36px;
+  overflow: hidden;
+  transform: translateY(-$translate);
+  
+  .letter {
+    display: inline-block;
+    opacity: 0;
+    font-size: 24px;
+    top: $translate;
+    position:relative;
+  }
 }
 </style>
