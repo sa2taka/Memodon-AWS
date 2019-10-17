@@ -7,10 +7,7 @@
       <v-spacer></v-spacer>
 
       <unauth-menu v-if="!isSignin"></unauth-menu>
-
-      <v-btn v-else text @click="sighout">
-        <p class="ml-1 my-auto">Sign out</p>
-      </v-btn>
+      <signing-menu v-else></signing-menu>
     </v-app-bar>
 
     <v-content id="main">
@@ -27,10 +24,12 @@ import User from '@/store/modules/user';
 import { Auth } from 'aws-amplify';
 
 import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
+import SigningMenu from '@/components/NavBar/SigningMenu.vue';
 
 @Component({
   components: {
     UnauthMenu,
+    SigningMenu,
   },
 })
 export default class App extends Vue {
@@ -78,22 +77,16 @@ export default class App extends Vue {
     Theme.setTheme(isDark ? 'dark' : 'light');
   }
 
-  private sighout() {
-    User.signOut();
-    Auth.signOut()
-      .then((data) => {
-        this.$forceUpdate();
-      })
-      .catch((err) => {
-        this.$forceUpdate();
-      });
-  }
-
   private get storageState(): any {
     if (this.storageStateEntity) {
       return this.storageStateEntity;
     }
-    this.storageStateEntity = JSON.parse(localStorage.memodonState);
+    try {
+      this.storageStateEntity = JSON.parse(localStorage.memodonState);
+    } catch {
+      this.storageStateEntity = null;
+      return null;
+    }
     return this.storageStateEntity;
   }
 }

@@ -18,7 +18,7 @@ export interface UserState {
   isSignin: boolean;
 }
 
-@Module({ dynamic: true, store, name: 'theme', namespaced: true })
+@Module({ dynamic: true, store, name: 'user', namespaced: true })
 class User extends VuexModule implements UserState {
   public id: string = '';
   public twitterId: string = '';

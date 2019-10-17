@@ -137,6 +137,7 @@ export default class SinginWithTwitter extends Vue {
     if (existedUser) {
       this.reason = 'already_singed';
       this.isError = true;
+      return;
     }
 
     if (typeof preToken === 'string' && typeof verifier === 'string') {
@@ -167,7 +168,7 @@ export default class SinginWithTwitter extends Vue {
         } = response.data;
 
         twitterIdInfo = ownerId;
-        displayNameInfo = screenName;
+        displayNameInfo = name;
         iconUrlInfo = iconUrl;
 
         // To eliminate token and verifier

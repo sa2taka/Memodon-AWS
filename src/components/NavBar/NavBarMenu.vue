@@ -39,7 +39,7 @@ export default class NavBarMenu extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  .menu-grey {
-    background: #484848!important;
-  }
+.menu-grey {
+  background: #484848 !important;
+}
 </style>
