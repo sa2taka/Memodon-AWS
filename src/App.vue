@@ -12,11 +12,11 @@
         :dark="isDark"
         id="dark-mode-switch"
       ></v-switch>
-      <v-btn text @click="singinWithTwitter">
+      <v-btn v-if="!isSignin" text @click="singinWithTwitter">
         <v-icon color="#1DA1F2" v-html="'$vuetify.icons.twitter'"></v-icon>
         <p class="ml-1 my-auto">Sign in with Twitter</p>
       </v-btn>
-      <v-btn text @click="sighout">
+      <v-btn v-else text @click="sighout">
         <p class="ml-1 my-auto">Sign out</p>
       </v-btn>
     </v-app-bar>
@@ -36,29 +36,37 @@ import { Auth } from 'aws-amplify';
 
 @Component
 export default class App extends Vue {
-  public get isSignin() {
-    return User.isSignin;
-  }
   public isDark: boolean = false;
+  private storageStateEntity: any = null;
 
   public created() {
-    this.updateTheme();
+    this.setTheme();
+    this.setUser();
   }
 
   @Watch('isDark')
   public changedTheme(isDark: boolean) {
-    this.setTheme(isDark);
+    this.updateTheme(isDark);
   }
 
-  public updateTheme() {
-    if (localStorage.theme) {
-      this.isDark = localStorage.theme === 'dark';
-      this.setTheme(this.isDark);
+  public get isSignin() {
+    return User.isSignin;
+  }
+
+  private setTheme() {
+    if (this.storageState) {
+      this.isDark = this.storageState.theme.theme === 'dark';
+      this.updateTheme(this.isDark);
     }
   }
 
-  private setTheme(isDark: boolean) {
-    localStorage.theme = isDark ? 'dark' : 'light';
+  private setUser() {
+    if (this.storageState) {
+      User.setUser(this.storageState.user);
+    }
+  }
+
+  private updateTheme(isDark: boolean) {
     this.$vuetify.theme.dark = isDark;
     Theme.setTheme(isDark ? 'dark' : 'light');
   }
@@ -69,6 +77,7 @@ export default class App extends Vue {
   }
 
   private sighout() {
+    User.signOut();
     Auth.signOut()
       .then((data) => {
         this.$forceUpdate();
@@ -76,6 +85,14 @@ export default class App extends Vue {
       .catch((err) => {
         this.$forceUpdate();
       });
+  }
+
+  private get storageState(): any {
+    if (this.storageStateEntity) {
+      return this.storageStateEntity;
+    }
+    this.storageStateEntity = JSON.parse(localStorage.memodonState);
+    return this.storageStateEntity;
   }
 }
 </script>

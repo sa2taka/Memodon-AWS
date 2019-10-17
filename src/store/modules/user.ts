@@ -45,10 +45,22 @@ class User extends VuexModule implements UserState {
     });
   }
 
- @Action({ commit: 'setInfo' })
- public setUser(data: UserState) {
-   return data;
- }
+  @Action({ commit: 'setInfo' })
+  public setUser(data: UserState) {
+    return data;
+  }
+
+  @Action({ commit: 'setInfo' })
+  public signOut() {
+    return {
+      id: '',
+      twitterId: '',
+      userName: '',
+      displayName: '',
+      iconUrl: '',
+      isSignin: false,
+    };
+  }
 }
 
 const userModule = getModule(User);
