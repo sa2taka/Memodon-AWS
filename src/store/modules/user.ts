@@ -37,6 +37,16 @@ class User extends VuexModule implements UserState {
     this.isSignin = true;
   }
 
+  @Mutation
+  public signOut() {
+    this.id = '';
+    this.twitterId = '';
+    this.userName = '';
+    this.displayName = '';
+    this.iconUrl = '';
+    this.isSignin = false;
+  }
+
   @Action({ commit: 'setInfo' })
   public pullUser(id: string) {
     return API.graphql({
@@ -48,18 +58,6 @@ class User extends VuexModule implements UserState {
   @Action({ commit: 'setInfo' })
   public setUser(data: UserState) {
     return data;
-  }
-
-  @Action({ commit: 'setInfo' })
-  public signOut() {
-    return {
-      id: '',
-      twitterId: '',
-      userName: '',
-      displayName: '',
-      iconUrl: '',
-      isSignin: false,
-    };
   }
 }
 

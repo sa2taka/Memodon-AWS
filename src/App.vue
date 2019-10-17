@@ -5,17 +5,9 @@
         <span>Memodon</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-label :dark="isDark">Dark Mode</v-label>
-      <v-switch
-        v-model="isDark"
-        class="center-switch"
-        :dark="isDark"
-        id="dark-mode-switch"
-      ></v-switch>
-      <v-btn v-if="!isSignin" text @click="singinWithTwitter">
-        <v-icon color="#1DA1F2" v-html="'$vuetify.icons.twitter'"></v-icon>
-        <p class="ml-1 my-auto">Sign in with Twitter</p>
-      </v-btn>
+
+      <unauth-menu v-if="!isSignin"></unauth-menu>
+
       <v-btn v-else text @click="sighout">
         <p class="ml-1 my-auto">Sign out</p>
       </v-btn>
@@ -34,7 +26,13 @@ import User from '@/store/modules/user';
 
 import { Auth } from 'aws-amplify';
 
-@Component
+import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
+
+@Component({
+  components: {
+    UnauthMenu,
+  },
+})
 export default class App extends Vue {
   public isDark: boolean = false;
   private storageStateEntity: any = null;
@@ -42,6 +40,7 @@ export default class App extends Vue {
   public created() {
     this.setTheme();
     this.setUser();
+    this.subscribeTheme();
   }
 
   @Watch('isDark')
@@ -61,19 +60,22 @@ export default class App extends Vue {
   }
 
   private setUser() {
-    if (this.storageState) {
+    if (this.storageState && this.storageState.user.isSignin) {
       User.setUser(this.storageState.user);
     }
+  }
+
+  private subscribeTheme() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'theme/setTheme') {
+        this.isDark = mutation.payload === 'dark';
+      }
+    });
   }
 
   private updateTheme(isDark: boolean) {
     this.$vuetify.theme.dark = isDark;
     Theme.setTheme(isDark ? 'dark' : 'light');
-  }
-
-  private singinWithTwitter() {
-    const url = 'https://api.memodon.com/v1/twitter/auth-page';
-    location.href = url;
   }
 
   private sighout() {
