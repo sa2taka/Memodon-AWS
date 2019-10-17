@@ -129,9 +129,12 @@ export default class SinginWithTwitter extends Vue {
       }
     }, 30 * 1000);
 
-    const existedUser = await Auth.currentAuthenticatedUser();
+    // Catch return null because throw error if have not authenticated
+    const existedUser = await Auth.currentAuthenticatedUser().catch(
+      (e) => null
+    );
 
-    if (existedUser.id) {
+    if (existedUser) {
       this.reason = 'already_singed';
       this.isError = true;
     }
@@ -204,10 +207,9 @@ export default class SinginWithTwitter extends Vue {
       })
       .then((data) => {
         this.isComplete = true;
-        this.runAnime();
-        setTimeout(() => {
+        this.runAnime().then(() => {
           this.returnTopPage();
-        }, 1 * 1000);
+        });
       })
       .catch((e) => {
         this.isError = true;
@@ -322,7 +324,7 @@ export default class SinginWithTwitter extends Vue {
         delay: (el: Element, i: number) => 25 * i,
       });
 
-    a.play();
+    return a.finished;
   }
 
   private get theme(): string {
@@ -373,17 +375,17 @@ export default class SinginWithTwitter extends Vue {
 
 .letters {
   $translate: 14px;
-  
+
   height: 36px;
   overflow: hidden;
   transform: translateY(-$translate);
-  
+
   .letter {
     display: inline-block;
     opacity: 0;
     font-size: 24px;
     top: $translate;
-    position:relative;
+    position: relative;
   }
 }
 </style>
