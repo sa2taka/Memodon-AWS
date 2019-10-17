@@ -46,6 +46,12 @@
                 Invalid access.<br />
                 Go to "Sign in with Twitter" if you want to signin.
               </p>
+              <p
+                v-if="!isComplete && isError && reason === 'already_singed'"
+                style="height: 66px"
+              >
+                You have already singed in.
+              </p>
             </transition>
             <!-- empty padding -->
             <p v-if="!isComplete && !isError" style="height: 66px"></p>
@@ -104,7 +110,11 @@ export default class SinginWithTwitter extends Vue {
 
   private dialog = true;
 
-  private reason: 'timeout' | 'auth_error' | 'invalid_access' = 'auth_error';
+  private reason:
+    | 'timeout'
+    | 'auth_error'
+    | 'invalid_access'
+    | 'already_singed' = 'auth_error';
 
   public created() {
     const preToken = this.$route.query.oauth_token;
@@ -117,10 +127,17 @@ export default class SinginWithTwitter extends Vue {
       }
     }, 30 * 1000);
 
+    const existedUser = await Auth.currentAuthenticatedUser();
+
+    if (existedUser.id) {
+      this.reason = 'already_singed';
+      this.isError = true;
+    }
+
     if (typeof preToken === 'string' && typeof verifier === 'string') {
       this.signinFlow(preToken, verifier);
     } else {
-      this.isComplete = true;
+      this.isError = true;
       this.reason = 'invalid_access';
       this.runAnime();
       return;
