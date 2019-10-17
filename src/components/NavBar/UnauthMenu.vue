@@ -18,12 +18,7 @@
         </v-list-item-content>
 
         <v-list-item-action>
-          <v-switch
-            v-model="isDark"
-            class="center-switch"
-            :dark="isDark"
-            id="dark-mode-switch"
-          ></v-switch>
+          <dark-theme-switch></dark-theme-switch>
         </v-list-item-action>
       </template>
     </v-list-item>
@@ -33,30 +28,16 @@
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import NavBarMenu from '@/components/NavBar/NavBarMenu.vue';
+import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
 import theme from '@/store/modules/theme';
 
 @Component({
   components: {
     NavBarMenu,
+    DarkThemeSwitch,
   },
 })
 export default class UnauthMenu extends Vue {
-  private isDark: boolean = false;
-
-  public created() {
-    this.isDark = theme.theme === 'dark';
-    this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'theme/setTheme') {
-        this.isDark = mutation.payload === 'dark';
-      }
-    });
-  }
-
-  @Watch('isDark')
-  public onChangeTheme(isDark: boolean) {
-    theme.setTheme(isDark ? 'dark' : 'light');
-  }
-
   private singinWithTwitter() {
     const url = 'https://api.memodon.com/v1/twitter/auth-page';
     location.href = url;

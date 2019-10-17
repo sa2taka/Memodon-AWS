@@ -30,12 +30,7 @@
         </v-list-item-content>
 
         <v-list-item-action>
-          <v-switch
-            v-model="isDark"
-            class="center-switch"
-            :dark="isDark"
-            id="dark-mode-switch"
-          ></v-switch>
+          <dark-theme-switch></dark-theme-switch>
         </v-list-item-action>
       </template>
     </v-list-item>
@@ -47,6 +42,7 @@ import { Component, Watch, Vue } from 'vue-property-decorator';
 import { Auth } from 'aws-amplify';
 
 import NavBarMenu from '@/components/NavBar/NavBarMenu.vue';
+import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
 
 import theme from '@/store/modules/theme';
 import User, { UserState } from '@/store/modules/user';
@@ -54,32 +50,19 @@ import User, { UserState } from '@/store/modules/user';
 @Component({
   components: {
     NavBarMenu,
+    DarkThemeSwitch,
   },
 })
 export default class SigningMenu extends Vue {
-  private isDark: boolean = false;
   private user: UserState = User;
 
   public created() {
-    this.isDark = theme.theme === 'dark';
-    this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'theme/setTheme') {
-        this.isDark = mutation.payload === 'dark';
-      }
-    });
-
     this.$store.subscribe((mutation, state) => {
       if (mutation.type.startsWith('user/')) {
         this.user = mutation.payload;
       }
     });
   }
-
-  @Watch('isDark')
-  public onChangeTheme(isDark: boolean) {
-    theme.setTheme(isDark ? 'dark' : 'light');
-  }
-
   private signout() {
     User.signOut();
     Auth.signOut()
