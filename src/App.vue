@@ -6,7 +6,12 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-label :dark="isDark">Dark Mode</v-label>
-      <v-switch v-model="isDark" class="center-switch" :dark="isDark" id="dark-mode-switch"></v-switch>
+      <v-switch
+        v-model="isDark"
+        class="center-switch"
+        :dark="isDark"
+        id="dark-mode-switch"
+      ></v-switch>
       <v-btn text @click="singinWithTwitter">
         <v-icon color="#1DA1F2" v-html="'$vuetify.icons.twitter'"></v-icon>
         <p class="ml-1 my-auto">Sign in with Twitter</p>
@@ -31,7 +36,6 @@ import { Auth } from 'aws-amplify';
 
 @Component
 export default class App extends Vue {
-
   public get isSignin() {
     return User.isSignin;
   }
@@ -45,7 +49,8 @@ export default class App extends Vue {
   public changedTheme(isDark: boolean) {
     this.setTheme(isDark);
   }
-public updateTheme() {
+
+  public updateTheme() {
     if (localStorage.theme) {
       this.isDark = localStorage.theme === 'dark';
       this.setTheme(this.isDark);

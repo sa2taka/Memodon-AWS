@@ -6,11 +6,23 @@
       </div>
       <div class="index-title__content">
         <h1
-          :class="['index-title__content__base', 'index-title__content__label', `background--${theme}`]"
-        >Memodon</h1>
+          :class="[
+            'index-title__content__base',
+            'index-title__content__label',
+            `background--${theme}`,
+          ]"
+        >
+          Memodon
+        </h1>
         <div
-          :class="['index-title__content__base', 'index-title__content__text', `background--${theme}`]"
-        >マストドンがメモ帳に</div>
+          :class="[
+            'index-title__content__base',
+            'index-title__content__text',
+            `background--${theme}`,
+          ]"
+        >
+          マストドンがメモ帳に
+        </div>
         <div class="index-title__content__base index-title__content__icon">
           <v-icon class="index-title__content__icon__content">fa-pen</v-icon>
         </div>
