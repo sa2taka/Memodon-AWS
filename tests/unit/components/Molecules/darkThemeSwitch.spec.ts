@@ -3,32 +3,33 @@ import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
 
-const localVue = createLocalVue()
+const localVue = createLocalVue();
 
 localVue.use(Vuetify);
 
 describe('Component', () => {
   let wrapper;
-  
-   beforeEach(() => {
+
+  beforeEach(() => {
     const store = new Vuex.Store({
-        state: {
-          theme: {
-            themes: 'light'
-          }
+      state: {
+        theme: {
+          themes: 'light',
         },
-      })
+      },
+    });
     wrapper = shallowMount(DarkThemeSwitch, { store, localVue });
   });
-  
+
   test('is a Vue instance', () => {
     expect(wrapper.element).toMatchSnapshot();
   });
-  
+
   test('become dark mode', () => {
-    wrapper.setMethods({ 
-      onChangeTheme: jest.fn(),
-    })
+    const functionMock = jest.fn();
+    wrapper.setMethods({
+      onChangeTheme: functionMock,
+    });
     wrapper.vm.$data.isDark = true;
   });
 });
