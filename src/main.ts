@@ -6,6 +6,15 @@ import './registerServiceWorker';
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+import Amplify, * as AmplifyModules from 'aws-amplify';
+// @ts-ignore
+import { AmplifyPlugin } from 'aws-amplify-vue';
+// @ts-ignore
+import awsconfig from './aws-exports';
+
+Amplify.configure(awsconfig);
+
+Vue.use(AmplifyPlugin, AmplifyModules);
 
 Vue.config.productionTip = false;
 

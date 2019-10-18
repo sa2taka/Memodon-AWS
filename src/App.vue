@@ -5,8 +5,9 @@
         <span>Memodon</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-label :dark="isDark">Dark Mode</v-label>
-      <v-switch v-model="isDark" class="center-switch" :dark="isDark" id="dark-mode-switch"></v-switch>
+
+      <unauth-menu v-if="!isSignin"></unauth-menu>
+      <signing-menu v-else></signing-menu>
     </v-app-bar>
 
     <v-content id="main">
@@ -17,28 +18,76 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import theme from '@/store/modules/theme';
+import Theme from '@/store/modules/theme';
+import User from '@/store/modules/user';
 
-@Component
+import { Auth } from 'aws-amplify';
+
+import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
+import SigningMenu from '@/components/NavBar/SigningMenu.vue';
+
+@Component({
+  components: {
+    UnauthMenu,
+    SigningMenu,
+  },
+})
 export default class App extends Vue {
   public isDark: boolean = false;
+  private storageStateEntity: any = null;
 
   public created() {
-    if (localStorage.theme) {
-      this.isDark = localStorage.theme === 'dark';
-      this.setTheme(this.isDark);
-    }
+    this.setTheme();
+    this.setUser();
+    this.subscribeTheme();
   }
 
   @Watch('isDark')
   public changedTheme(isDark: boolean) {
-    this.setTheme(isDark);
+    this.updateTheme(isDark);
   }
 
-  private setTheme(isDark: boolean) {
-    localStorage.theme = isDark ? 'dark' : 'light';
+  public get isSignin() {
+    return User.isSignin;
+  }
+
+  private setTheme() {
+    if (this.storageState) {
+      this.isDark = this.storageState.theme.theme === 'dark';
+      this.updateTheme(this.isDark);
+    }
+  }
+
+  private setUser() {
+    if (this.storageState && this.storageState.user.isSignin) {
+      User.setUser(this.storageState.user);
+    }
+  }
+
+  private subscribeTheme() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'theme/setTheme') {
+        this.isDark = mutation.payload === 'dark';
+      }
+    });
+  }
+
+  private updateTheme(isDark: boolean) {
     this.$vuetify.theme.dark = isDark;
-    theme.setTheme(isDark ? 'dark' : 'light');
+    Theme.setTheme(isDark ? 'dark' : 'light');
+  }
+
+  private get storageState(): any {
+    if (this.storageStateEntity) {
+      return this.storageStateEntity;
+    }
+    try {
+      this.storageStateEntity = JSON.parse(localStorage.memodonState);
+    } catch {
+      this.storageStateEntity = null;
+      return null;
+    }
+    return this.storageStateEntity;
   }
 }
 </script>
