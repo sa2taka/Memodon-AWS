@@ -83,7 +83,7 @@ export default class App extends Vue {
     }
     try {
       this.storageStateEntity = JSON.parse(localStorage.memodonState);
-    } catch {
+    } catch (e) {
       this.storageStateEntity = null;
       return null;
     }

@@ -25,7 +25,7 @@
       </v-list-item>
 
       <v-divider></v-divider>
-      
+
       <v-list dense nav>
         <slot></slot>
       </v-list>

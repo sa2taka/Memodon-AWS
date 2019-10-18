@@ -1,7 +1,11 @@
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
+import Vuex from 'vuex';
 import Router from 'vue-router';
 import App from '@/App.vue';
+
+
+const localVue = createLocalVue()
 
 describe('App.vue', () => {
   let wrapper;
@@ -11,42 +15,31 @@ describe('App.vue', () => {
     localVue = createLocalVue();
     localVue.use(Vuetify, {});
     localVue.use(Router);
+    localVue.use(Vuex);
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(App, { localVue });
+    const store = new Vuex.Store({
+        state: {
+          theme: {
+            themes: 'light'
+          }
+        },
+      })
+    wrapper = shallowMount(App, { store, localVue });
   });
 
   it('should display navigation bar', () => {
     expect(wrapper.html()).toContain('<span>Memodon</span>');
-    expect(wrapper.html()).toContain('Dark Mode');
-  });
-
-  it('should be light theme at first', () => {
-    expect(wrapper.html()).not.toContain('dark="true"');
   });
 
   it('should become dark mode', () => {
-    const setThemeMock = jest.fn();
+    const updateThemeMock = jest.fn();
     wrapper.setMethods({
-      setTheme: setThemeMock,
+      updateTheme: updateThemeMock,
     });
     wrapper.vm.$data.isDark = true;
 
-    expect(setThemeMock).toBeCalled();
-    expect(wrapper.html()).toContain('dark="true"');
-  });
-
-  it('should become dark mode if localStorage.theme equals dark', () => {
-    const setThemeMock = jest.fn();
-
-    localStorage.setItem('theme', 'dark');
-
-    wrapper = shallowMount(App, {
-      localVue,
-      vuetify: new Vuetify(), // is this.$vuetify in App.vue
-    });
-
-    expect(wrapper.html()).toContain('dark="true"');
+    expect(updateThemeMock).toBeCalled();
   });
 });
