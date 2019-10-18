@@ -39,9 +39,9 @@ export default class NavBarMenu extends Vue {
 
     window.addEventListener('resize', () => {
       if (window.innerWidth > BoundaryWidth) {
-        this.isSmartphoneWidth = true;
-      } else {
         this.isSmartphoneWidth = false;
+      } else {
+        this.isSmartphoneWidth = true;
       }
     });
   }
