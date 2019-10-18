@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component is a Vue instance 1`] = `
+<nav-bar-menu-stub>
+  <v-list-item-stub
+    activeclass=""
+    tag="div"
+  >
+    <v-list-item-content-stub>
+      <v-list-item-title-stub>
+        <v-btn-stub
+          activeclass=""
+          tag="button"
+          text="true"
+          type="button"
+        >
+          <v-icon-stub
+            color="#1DA1F2"
+          />
+           
+          <p
+            class="ml-1 my-auto"
+          >
+            Sign in with Twitter
+          </p>
+        </v-btn-stub>
+      </v-list-item-title-stub>
+    </v-list-item-content-stub>
+  </v-list-item-stub>
+   
+  <v-divider-stub />
+   
+  <v-list-item-stub
+    activeclass=""
+    tag="div"
+  />
+</nav-bar-menu-stub>
+`;

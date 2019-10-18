@@ -113,7 +113,8 @@
       "**/src/App.vue",
       "!**/src/plugins/**",
       "!**/node_modules/**",
-      "!**/graphql/**"
+      "!**/graphql/**",
+      "!**/src/views/**"
     ],
     "snapshotSerializers": [
       "jest-serializer-vue"
