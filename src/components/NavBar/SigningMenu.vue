@@ -14,7 +14,7 @@
       <v-list-item-content>
         <v-list-item-title>
           <div class="signout-button">
-            <v-btn depressed round color="primary" @click="signout">
+            <v-btn depressed rounded color="primary" @click="signout">
               <v-icon small left>fa-sign-out-alt</v-icon>
               <p class="my-auto">Signout</p>
             </v-btn>
