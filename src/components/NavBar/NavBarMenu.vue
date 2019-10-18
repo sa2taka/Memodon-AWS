@@ -20,18 +20,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import theme from '@/store/modules/theme';
 
 @Component
 export default class NavBarMenu extends Vue {
   private isDark: boolean = false;
+  private isSmartphoneWidth: boolean = false;
+  private BoundaryWidth = 980;
 
   public created() {
     this.isDark = theme.theme === 'dark';
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'theme/setTheme') {
         this.isDark = mutation.payload === 'dark';
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > BoundaryWidth) {
+        this.isSmartphoneWidth = true;
+      } else {
+        this.isSmartphoneWidth = false;
       }
     });
   }
