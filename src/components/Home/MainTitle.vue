@@ -11,18 +11,14 @@
             'index-title__content__label',
             `background--${theme}`,
           ]"
-        >
-          Memodon
-        </h1>
+        >Memodon</h1>
         <div
           :class="[
             'index-title__content__base',
             'index-title__content__text',
             `background--${theme}`,
           ]"
-        >
-          マストドンがメモ帳に
-        </div>
+        >マストドンがメモ帳に</div>
         <div class="index-title__content__base index-title__content__icon">
           <v-icon class="index-title__content__icon__content">fa-pen</v-icon>
         </div>
@@ -52,26 +48,29 @@ export default class MainTitle extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.main-title {
+#main-title {
   width: 100%;
-  height: 300px;
   display: flex;
   justify-content: center;
   position: relative;
   top: 60px;
 }
+
 .index-title {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 50vw;
-  height: 280px;
   line-height: 200px;
   overflow: hidden;
   margin: 0;
   transition: all 0.4s ease-out;
 }
+
+.index-title__content__icon__content {
+  color: var(--v-primary-base);
+}
+
 .index-title__x:before,
 .index-title__x:after,
 .index-title__y:before,
@@ -82,37 +81,22 @@ export default class MainTitle extends Vue {
   transition: all 0.4s ease-out;
 }
 .index-title__y:before {
-  bottom: 0;
-  right: -50vw;
-  width: 50vw;
-  height: 3px;
   animation: topLine 0.4s ease 0.8s forwards;
   animation-fill-mode: both;
 }
 .index-title__y:after {
-  top: 0;
-  left: -50vw;
-  width: 50vw;
-  height: 3px;
   animation: bottomLine 0.4s ease 0s forwards;
   animation-fill-mode: both;
 }
 .index-title__x:before {
-  top: -280px;
-  right: 0;
-  width: 3px;
-  height: 280px;
   animation: rightLine 0.4s ease 0.4s forwards;
   animation-fill-mode: both;
 }
 .index-title__x:after {
-  bottom: -280px;
-  left: 0;
-  width: 3px;
-  height: 280px;
   animation: leftLine 0.4s ease 1.2s forwards;
   animation-fill-mode: both;
 }
+
 .index-title__content {
   color: var(--v-primary-base);
   display: flex;
@@ -120,16 +104,126 @@ export default class MainTitle extends Vue {
   align-items: center;
   flex-flow: column;
 }
+
 .index-title__content__base {
-  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
-.index-title__content__label {
-  font-size: 42px;
-  font-weight: 600;
+
+@media (min-width: 601px) {
+  $height: 280px;
+  $width: 60%;
+
+  #main-title {
+    height: $height + 20px;
+  }
+
+  .index-title {
+    width: $width;
+    height: $height;
+  }
+
+  .index-title__content__label {
+    font-size: 42px;
+    font-weight: 600;
+  }
+
+  .index-title__content__text {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .index-title__content__icon__content {
+    font-size: 42px;
+  }
+
+  .index-title__y:before {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 3px;
+  }
+  .index-title__y:after {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+  }
+  .index-title__x:before {
+    top: -100%;
+    right: 0;
+    width: 3px;
+    height: 100%;
+  }
+  .index-title__x:after {
+    bottom: -100%;
+    left: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .index-title__content__base {
+    height: $height / 4;
+  }
+}
+
+@media (max-width: 600px) {
+  $height: 175px;
+  $width: 80%;
+
+  #main-title {
+    height: $height + 20px;
+  }
+
+  .index-title {
+    width: 77%;
+    height: 180px;
+  }
+
+  .index-title__content__label {
+    font-size: 32px;
+    font-weight: 600;
+  }
+
+  .index-title__content__text {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .index-title__content__icon__content {
+    font-size: 28px;
+  }
+
+  .index-title__y:before {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 3px;
+  }
+  .index-title__y:after {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+  }
+  .index-title__x:before {
+    top: -100%;
+    right: 0;
+    width: 3px;
+    height: 100%;
+  }
+  .index-title__x:after {
+    bottom: -100%;
+    left: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .index-title__content__base {
+    height: $height / 4;
+  }
 }
 
 .index-title__content__label:before {
@@ -143,20 +237,14 @@ export default class MainTitle extends Vue {
 }
 .index-title__content__icon {
   position: absolute;
-  top: 72px;
+  top: 24%;
   left: 20%;
   opacity: 0;
   transform: translateX(-50%);
   animation: penAnimation 1.6s linear 1.92s forwards;
   animation-fill-mode: both;
 }
-.index-title__content__icon__content {
-  font-size: 42px;
-  color: var(--v-primary-base);
-}
-.index-title__content__text {
-  font-size: 24px;
-}
+
 .index-title__content__text:before {
   content: '';
   position: absolute;
@@ -210,26 +298,26 @@ export default class MainTitle extends Vue {
   }
   30% {
     left: 80%;
-    top: 72px;
+    top: 24%;
   }
   40% {
-    top: 140px;
+    top: 47%;
     left: 18%;
   }
   50% {
-    top: 140px;
+    top: 47%;
     left: 18%;
   }
   80% {
-    top: 140px;
+    top: 47%;
     left: 82%;
   }
   90% {
-    top: 200px;
+    top: 66%;
     left: 48%;
   }
   100% {
-    top: 200px;
+    top: 66%;
     left: 50%;
     opacity: 1;
   }
