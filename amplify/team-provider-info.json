@@ -1,16 +1,4 @@
 {
-    "test": {
-        "awscloudformation": {
-            "AuthRoleName": "memodon-test-20190922211651-authRole",
-            "UnauthRoleArn": "arn:aws:iam::876243670426:role/memodon-test-20190922211651-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::876243670426:role/memodon-test-20190922211651-authRole",
-            "Region": "ap-northeast-1",
-            "DeploymentBucketName": "memodon-test-20190922211651-deployment",
-            "UnauthRoleName": "memodon-test-20190922211651-unauthRole",
-            "StackName": "memodon-test-20190922211651",
-            "StackId": "arn:aws:cloudformation:ap-northeast-1:876243670426:stack/memodon-test-20190922211651/dd1f2560-dd32-11e9-a64c-0e42406983d0"
-        }
-    },
     "production": {
         "awscloudformation": {
             "AuthRoleName": "memodon-production-20190930021719-authRole",
@@ -27,25 +15,34 @@
                 "memodon3688b20e": {
                     "hostedUIProviderCreds": "[]"
                 }
+            },
+            "function": {
+                "fetchMemos": {},
+                "memodon": {}
             }
         }
     },
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "memodon-dev-20191009044100-authRole",
-            "UnauthRoleArn": "arn:aws:iam::876243670426:role/memodon-dev-20191009044100-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::876243670426:role/memodon-dev-20191009044100-authRole",
+            "AuthRoleName": "memodon-dev-20191022195910-authRole",
+            "UnauthRoleArn": "arn:aws:iam::876243670426:role/memodon-dev-20191022195910-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::876243670426:role/memodon-dev-20191022195910-authRole",
             "Region": "ap-northeast-1",
-            "DeploymentBucketName": "memodon-dev-20191009044100-deployment",
-            "UnauthRoleName": "memodon-dev-20191009044100-unauthRole",
-            "StackName": "memodon-dev-20191009044100",
-            "StackId": "arn:aws:cloudformation:ap-northeast-1:876243670426:stack/memodon-dev-20191009044100/fe24e410-ea4e-11e9-8d10-0e0ff366987c"
+            "DeploymentBucketName": "memodon-dev-20191022195910-deployment",
+            "UnauthRoleName": "memodon-dev-20191022195910-unauthRole",
+            "StackName": "memodon-dev-20191022195910",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:876243670426:stack/memodon-dev-20191022195910/fa2f77a0-f4ba-11e9-8b90-0a1d3b063294"
         },
         "categories": {
             "auth": {
                 "memodon3688b20e": {
                     "hostedUIProviderCreds": "[]"
                 }
+            },
+            "function": {
+                "fetchMemos": {},
+                "memodon3688b20e": {},
+                "memodon": {}
             }
         }
     }

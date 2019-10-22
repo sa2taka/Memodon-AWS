@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "auth": {
+      "memodon3688b20e": ["read", "update"]
+    },
+    "api": {
+      "memodon": ["create", "read", "update", "delete"]
+    }
+  }
+}

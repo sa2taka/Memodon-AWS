@@ -6,3 +6,8 @@ export const MaxMediumWidth = 1263;
 export const MinLargeWidth = 1264;
 export const MaxLargeWidth = 1903;
 export const MinExtraLargeWidth = 1904;
+
+export const APIEndPoint = 'https://api.memodon.com';
+export const SigninEndPoint = `${APIEndPoint}/auth/signin`;
+export const AuthPageEndPoint = `${APIEndPoint}/auth/auth-page`;
+export const FetchMemosEndPoint = `${APIEndPoint}/memo/fetch`;

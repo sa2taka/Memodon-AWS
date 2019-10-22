@@ -30,6 +30,7 @@ import { Component, Watch, Vue } from 'vue-property-decorator';
 import NavBarMenu from '@/components/NavBar/NavBarMenu.vue';
 import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
 import theme from '@/store/modules/theme';
+import { AuthPageEndPoint } from '@/libs/globalConstVariables';
 
 @Component({
   components: {
@@ -39,7 +40,7 @@ import theme from '@/store/modules/theme';
 })
 export default class UnauthMenu extends Vue {
   private singinWithTwitter() {
-    const url = 'https://api.memodon.com/v1/twitter/auth-page';
+    const url = AuthPageEndPoint;
     location.href = url;
   }
 }

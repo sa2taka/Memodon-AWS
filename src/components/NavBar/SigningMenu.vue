@@ -1,6 +1,6 @@
 <template>
   <nav-bar-menu>
-    <v-list-item @click="">
+    <v-list-item @click>
       <v-list-item-avatar>
         <v-img :src="user.iconUrl"></v-img>
       </v-list-item-avatar>
@@ -10,6 +10,15 @@
         <v-list-item-subtitle v-html="user.userName"></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+
+    <v-list-item>
+      <v-list-item-content>
+        <v-list-item-title>
+          <v-btn @click="fetchMemo">fetch memo</v-btn>
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title>
@@ -39,7 +48,7 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 
 import NavBarMenu from '@/components/NavBar/NavBarMenu.vue';
 import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
@@ -72,6 +81,14 @@ export default class SigningMenu extends Vue {
       .catch((err) => {
         this.$router.push('/');
       });
+  }
+
+  private fetchMemo() {
+    const APIName = 'fetchMemo';
+    const path = '/fetch';
+    API.post(APIName, path).then((response) => {
+      console.log(response);
+    });
   }
 }
 </script>
