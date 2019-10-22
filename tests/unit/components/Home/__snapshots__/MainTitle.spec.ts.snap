@@ -22,23 +22,27 @@ exports[`Component is a Vue instance 1`] = `
       <h1
         class="index-title__content__base index-title__content__label background--light"
       >
+        
         Memodon
+      
       </h1>
        
       <div
         class="index-title__content__base index-title__content__text background--light"
       >
+        
         マストドンがメモ帳に
+      
       </div>
        
       <div
         class="index-title__content__base index-title__content__icon"
       >
-        <v-icon
+        <v-icon-stub
           class="index-title__content__icon__content"
         >
           fa-pen
-        </v-icon>
+        </v-icon-stub>
       </div>
     </div>
   </div>

@@ -7,13 +7,22 @@
     "build": "vue-cli-service build",
     "test": "yarn lint && yarn test:unit --coverage && codecov && yarn test:e2e",
     "lint": "vue-cli-service lint",
+    "format": "yarn lint && yarn prettier --write 'src/**/*.vue' 'src/**/*.ts' 'src/**/*.js' 'tests/**/*.ts' 'tests/**/*.js'",
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit --silent",
     "test:unit:verbose": "vue-cli-service test:unit --verbose"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.2",
+    "@types/animejs": "^3.1.0",
+    "@types/graphql": "^14.5.0",
+    "@types/zen-observable": "^0.8.0",
+    "animejs": "^3.1.0",
+    "aws-amplify": "^1.1.40",
+    "aws-amplify-vue": "^0.2.17",
     "core-js": "^2.6.5",
+    "global": "^4.4.0",
+    "prettier": "^1.18.2",
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
     "vue": "^2.6.10",
@@ -21,7 +30,8 @@
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
     "vuetify": "^2.0.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.1",
@@ -102,7 +112,9 @@
       "**/src/*/**/*.{ts,js,vue}",
       "**/src/App.vue",
       "!**/src/plugins/**",
-      "!**/node_modules/**"
+      "!**/node_modules/**",
+      "!**/graphql/**",
+      "!**/src/views/**"
     ],
     "snapshotSerializers": [
       "jest-serializer-vue"

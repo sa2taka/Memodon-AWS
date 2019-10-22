@@ -1,0 +1,11 @@
+{
+  "name": "TwitterAuth",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "sa2taka",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

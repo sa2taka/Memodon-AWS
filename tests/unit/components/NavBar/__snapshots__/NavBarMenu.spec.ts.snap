@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component is a Vue instance 1`] = `
+<div>
+  <!---->
+   
+  <!---->
+   
+  <v-menu-stub
+    bottom="true"
+    closedelay="0"
+    closeonclick="true"
+    contentclass="white"
+    left="true"
+    maxheight="auto"
+    maxwidth="auto"
+    nudgebottom="0"
+    nudgeleft="0"
+    nudgeright="0"
+    nudgetop="0"
+    nudgewidth="0"
+    offsety="true"
+    opendelay="0"
+    openonclick="true"
+    origin="top left"
+    transition="slide-y-transition"
+  >
+     
+    <v-list-stub
+      color="white"
+      dense="true"
+      nav="true"
+      tag="div"
+      tile="true"
+    />
+  </v-menu-stub>
+</div>
+`;
+
+exports[`Component is dark mode 1`] = `
+<div>
+  <!---->
+   
+  <!---->
+   
+  <v-menu-stub
+    bottom="true"
+    closedelay="0"
+    closeonclick="true"
+    contentclass="menu-grey"
+    left="true"
+    maxheight="auto"
+    maxwidth="auto"
+    nudgebottom="0"
+    nudgeleft="0"
+    nudgeright="0"
+    nudgetop="0"
+    nudgewidth="0"
+    offsety="true"
+    opendelay="0"
+    openonclick="true"
+    origin="top left"
+    transition="slide-y-transition"
+  >
+     
+    <v-list-stub
+      color="menu-grey"
+      dense="true"
+      nav="true"
+      tag="div"
+      tile="true"
+    />
+  </v-menu-stub>
+</div>
+`;
+
+exports[`Component is smartphone mode 1`] = `
+<div>
+  <v-app-bar-nav-icon-stub />
+   
+  <v-navigation-drawer-stub
+    absolute="true"
+    color="white"
+    height="100vh"
+    minivariantwidth="80"
+    mobilebreakpoint="1264"
+    right="true"
+    src=""
+    tag="aside"
+    temporary="true"
+    width="256"
+  >
+    <v-list-item-stub
+      activeclass=""
+      tag="div"
+    >
+      <v-list-item-content-stub>
+        <v-list-item-title-stub
+          class="title"
+        >
+          
+          Memodon
+        
+        </v-list-item-title-stub>
+         
+        <v-list-item-subtitle-stub>
+          
+          Memodon is your note.
+        
+        </v-list-item-subtitle-stub>
+      </v-list-item-content-stub>
+    </v-list-item-stub>
+     
+    <v-divider-stub />
+     
+    <v-list-stub
+      dense="true"
+      nav="true"
+      tag="div"
+      tile="true"
+    />
+  </v-navigation-drawer-stub>
+   
+  <!---->
+</div>
+`;
