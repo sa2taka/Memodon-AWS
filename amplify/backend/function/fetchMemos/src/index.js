@@ -8,6 +8,12 @@ var apiMemodonGraphQLAPIEndpointOutput = process.env.API_MEMODON_GRAPHQLAPIENDPO
 
 Amplify Params - DO NOT EDIT */
 
+const aws = require('aws-sdk');
+const AWSAppSyncClient = require('aws-appsync').default;
+const gql = require('graphql-tag');
+const AppSyncConfig = require('./aws-exports').default;
+
+
 const environment = process.env.ENV;
 const region = process.env.REGION;
 const authMemodon3688b20eUserPoolId =
@@ -15,6 +21,7 @@ const authMemodon3688b20eUserPoolId =
 const apiMemodonGraphQLAPIIdOutput = process.env.API_MEMODON_GRAPHQLAPIIDOUTPUT;
 const apiMemodonGraphQLAPIEndpointOutput =
   process.env.API_MEMODON_GRAPHQLAPIENDPOINTOUTPUT;
+const twitterAPIUserTimelineEndpoint = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 
 exports.handler = function(event, context) {
   console.log('environment: ', environment);
@@ -36,3 +43,63 @@ exports.handler = function(event, context) {
   };
   context.succeed(response); // SUCCESS with message
 };
+
+// graphql queries
+
+const getUser = `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    id
+    twitterId
+    userName
+    displayName
+    iconUrl
+    isPrivate
+    note {
+      items {
+        id
+        statusId
+        createdAt
+      }
+      nextToken
+    }
+    subUser {
+      items {
+        id
+        userName
+        displayName
+        iconUrl
+      }
+      nextToken
+    }
+  }
+}
+`;
+
+export const createMemo = `mutation CreateMemo($input: CreateMemoInput!) {
+  createMemo(input: $input) {
+    id
+    statusId
+    user {
+      id
+      twitterId
+      userName
+      displayName
+      iconUrl
+      isPrivate
+      note {
+        nextToken
+      }
+      subUser {
+        nextToken
+      }
+    }
+    tags {
+      items {
+        id
+      }
+      nextToken
+    }
+    createdAt
+  }
+}
+`;
