@@ -72,6 +72,8 @@
 						"API_MEMODON_GRAPHQLAPIENDPOINTOUTPUT": {
 							"Ref": "apimemodonGraphQLAPIEndpointOutput"
 						},
+						"TWITTER_API_KEY": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPIKey}}",
+						"TWITTER_API_SECRET": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPISecret}}"
 					}
 				},
 				"Role": {
