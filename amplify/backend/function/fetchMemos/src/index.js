@@ -11,7 +11,6 @@ Amplify Params - DO NOT EDIT */
 const aws = require('aws-sdk');
 const AWSAppSyncClient = require('aws-appsync').default;
 const gql = require('graphql-tag');
-const AppSyncConfig = require('./aws-exports').default;
 
 
 const environment = process.env.ENV;
@@ -24,25 +23,42 @@ const apiMemodonGraphQLAPIEndpointOutput =
 const twitterAPIUserTimelineEndpoint = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 
 exports.handler = function(event, context) {
-  console.log('environment: ', environment);
-  console.log('region: ', region);
-  console.log('authMemodon3688b20eUserPoolId: ', authMemodon3688b20eUserPoolId);
-  console.log('apiMemodonGraphQLAPIIdOutput: ', apiMemodonGraphQLAPIIdOutput);
-  console.log(
-    'apiMemodonGraphQLAPIEndpointOutput: ',
-    apiMemodonGraphQLAPIEndpointOutput
-  );
-  console.log('event:', event);
-  console.log('cognito-id:', event.requestContext.identity.cognitoIdentityId);
+  fetchTwitterMemos(event.requestContext.identity.cognitoIdentityId);
 
   const response = {
     statusCode: 200,
     body: JSON.stringify({
       hello: 'Hello, World',
     }),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
   };
   context.succeed(response); // SUCCESS with message
 };
+
+const fetchTwitterMemos = (cognitoId) => {
+  getComputedStyle(cognitoId);
+}
+
+const getTwitterUserIds = async(cognitoId) => {
+  const user = await appsyncClient.query({
+    query: gql(getUser),
+    variables: { id: cognitoId },
+  });
+
+  console.log(user);
+}
+
+const appsyncClient = new AWSAppSyncClient({
+  url: apiMemodonGraphQLAPIEndpointOutput,
+  region: region,
+  auth: {
+    type: "AWS_IAM",
+    credentials: () => aws.config.credentials
+  },
+  disableOffline: true
+});
 
 // graphql queries
 
@@ -75,7 +91,7 @@ const getUser = `query GetUser($id: ID!) {
 }
 `;
 
-export const createMemo = `mutation CreateMemo($input: CreateMemoInput!) {
+const createMemo = `mutation CreateMemo($input: CreateMemoInput!) {
   createMemo(input: $input) {
     id
     statusId
