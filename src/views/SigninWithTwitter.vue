@@ -141,7 +141,7 @@ export default class SinginWithTwitter extends Vue {
     }
 
     if (typeof preToken === 'string' && typeof verifier === 'string') {
-      this.signinFlow(preToken, verifier);
+      this.signinAlongFlow(preToken, verifier);
     } else {
       this.isError = true;
       this.reason = 'invalid_access';
@@ -150,10 +150,12 @@ export default class SinginWithTwitter extends Vue {
     }
   }
 
-  private signinFlow(preToken: string, verifier: string) {
+  private signinAlongFlow(preToken: string, verifier: string) {
     let twitterIdInfo: string;
     let displayNameInfo: string;
     let iconUrlInfo: string;
+    let tokenInfo: string;
+    let secretInfo: string;
 
     this.getToken(preToken, verifier)
       .then((response) => {
@@ -170,6 +172,8 @@ export default class SinginWithTwitter extends Vue {
         twitterIdInfo = ownerId;
         displayNameInfo = name;
         iconUrlInfo = iconUrl;
+        tokenInfo = token;
+        secretInfo = secret;
 
         // To eliminate token and verifier
         this.$router.replace('/signin/twitter');
@@ -194,7 +198,9 @@ export default class SinginWithTwitter extends Vue {
           user,
           twitterIdInfo,
           displayNameInfo,
-          iconUrlInfo
+          iconUrlInfo,
+          tokenInfo,
+          secretInfo
         )) as {
           data: {
             createUser: UserState;
@@ -215,6 +221,7 @@ export default class SinginWithTwitter extends Vue {
       .catch((e) => {
         this.isError = true;
         this.reason = 'auth_error';
+        User.signOut();
       });
   }
 
@@ -272,7 +279,9 @@ export default class SinginWithTwitter extends Vue {
     credentials: { id: string; name: string },
     twitterId: string,
     displayName: string,
-    iconUrl: string
+    iconUrl: string,
+    OAtuhToken: string,
+    OAuthSecret: string
   ) {
     const userInfo = {
       id: credentials.id,
@@ -280,6 +289,8 @@ export default class SinginWithTwitter extends Vue {
       userName: credentials.name,
       displayName,
       iconUrl,
+      OAtuhToken,
+      OAuthSecret,
     };
 
     return API.graphql({

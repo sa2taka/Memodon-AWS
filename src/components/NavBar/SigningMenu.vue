@@ -87,12 +87,13 @@ export default class SigningMenu extends Vue {
     const APIName = 'MemodonAPI';
     const path = '/fetch';
     const myInit = {};
-    API.post(APIName, path, myInit).then((response) => {
-      // TODO: wait for fetching memo finish.
-    })
-    .catch((err) => {
-      // TODO: behavior for fetching memo is error.
-    });
+    API.post(APIName, path, myInit)
+      .then((response) => {
+        // TODO: wait for fetching memo finish.
+      })
+      .catch((err) => {
+        // TODO: behavior for fetching memo is error.
+      });
   }
 }
 </script>
