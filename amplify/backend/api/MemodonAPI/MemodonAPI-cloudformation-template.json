@@ -333,14 +333,6 @@
                     "schema": {
                       "$ref": "#/definitions/RequestSchema"
                     }
-                  },
-                  {
-                    "in": "header",
-                    "name": "Authorization",
-                    "required": true,
-                    "schema": {
-                      "$ref": "#/definitions/ResponseSchema"
-                    }
                   }
                 ],
                 "responses": {

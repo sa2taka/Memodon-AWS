@@ -12,7 +12,11 @@ describe('Component', () => {
 
   beforeEach(() => {
     const store = new Vuex.Store({});
-    wrapper = shallowMount(NavBarMenu, { store, localVue, vuetify: new Vuetify() });
+    wrapper = shallowMount(NavBarMenu, {
+      store,
+      localVue,
+      vuetify: new Vuetify(),
+    });
   });
 
   test('is a Vue instance', () => {
@@ -20,13 +24,15 @@ describe('Component', () => {
     expect(wrapper.find('v-menu-stub').exists()).toBe(true);
     expect(wrapper.find('v-menu-stub').attributes().contentclass).toBe('white');
   });
-  
+
   test('is dark mode', () => {
     wrapper.vm.isDark = true;
     expect(wrapper.element).toMatchSnapshot();
-    expect(wrapper.find('v-menu-stub').attributes().contentclass).toBe('menu-grey');
+    expect(wrapper.find('v-menu-stub').attributes().contentclass).toBe(
+      'menu-grey'
+    );
   });
-  
+
   test('is smartphone mode', () => {
     wrapper.vm.isSmartphoneWidth = true;
     expect(wrapper.element).toMatchSnapshot();

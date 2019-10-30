@@ -75,7 +75,7 @@ describe('App.vue', () => {
     });
     expect(wrapper.vm.storageState.theme.theme).toBe('light');
   });
-  
+
   it('should user is update from localStorage', () => {
     const key = 'memodonState';
     const value =
@@ -88,6 +88,6 @@ describe('App.vue', () => {
       vuetify: new Vuetify(),
     });
 
-    expect(wrapper.vm.storageState.user.id).toBe('testedValue')
+    expect(wrapper.vm.storageState.user.id).toBe('testedValue');
   });
 });

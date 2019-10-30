@@ -4,7 +4,11 @@
       <v-card class="message-card">
         <!-- pb-4 adjusts bottom margin to equal top margin -->
         <v-card-title class="headline pb-4" justify="center">
-          <loading :isComplete="isComplete" :isError="isError" :side="side"></loading>
+          <loading
+            :isComplete="isComplete"
+            :isError="isError"
+            :side="side"
+          ></loading>
           <p class="ml-4 my-auto">Signing in...</p>
         </v-card-title>
 
@@ -17,25 +21,35 @@
               </div>
             </span>
             <transition name="error-message">
-              <p v-if="!isComplete && isError && reason === 'auth_error'" style="height: 66px">
-                We're sorry, but something error occured processing the
-                singin.
+              <p
+                v-if="!isComplete && isError && reason === 'auth_error'"
+                style="height: 66px"
+              >
+                We're sorry, but something error occured processing the singin.
                 <br />Please retry.
               </p>
             </transition>
             <transition name="error-message">
-              <p v-if="!isComplete && isError && reason === 'timeout'" style="height: 66px">
+              <p
+                v-if="!isComplete && isError && reason === 'timeout'"
+                style="height: 66px"
+              >
                 Timeout occured processing the signin.
                 <br />Please retry.
               </p>
-              <p v-if="!isComplete && isError && reason === 'invalid_access'" style="height: 66px">
+              <p
+                v-if="!isComplete && isError && reason === 'invalid_access'"
+                style="height: 66px"
+              >
                 Invalid access.
                 <br />Go to "Sign in with Twitter" if you want to signin.
               </p>
               <p
                 v-if="!isComplete && isError && reason === 'already_singed'"
                 style="height: 66px"
-              >You have already singed in.</p>
+              >
+                You have already singed in.
+              </p>
             </transition>
             <!-- empty padding -->
             <p v-if="!isComplete && !isError" style="height: 66px"></p>
@@ -53,7 +67,8 @@
                 large
                 @click="returnTopPage"
                 v-if="!isComplete && isError"
-              >Sure</v-btn>
+                >Sure</v-btn
+              >
             </transition>
             <!-- empty padding -->
             <p v-if="!isError" style="height: 28px"></p>

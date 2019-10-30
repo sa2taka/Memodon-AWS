@@ -11,7 +11,7 @@ Amplify Params - DO NOT EDIT */
 const aws = require('aws-sdk');
 const AWSAppSyncClient = require('aws-appsync').default;
 const gql = require('graphql-tag');
-
+require('isomorphic-fetch');
 
 const environment = process.env.ENV;
 const region = process.env.REGION;
@@ -20,10 +20,11 @@ const authMemodon3688b20eUserPoolId =
 const apiMemodonGraphQLAPIIdOutput = process.env.API_MEMODON_GRAPHQLAPIIDOUTPUT;
 const apiMemodonGraphQLAPIEndpointOutput =
   process.env.API_MEMODON_GRAPHQLAPIENDPOINTOUTPUT;
-const twitterAPIUserTimelineEndpoint = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+const twitterAPIUserTimelineEndpoint =
+  'https://api.twitter.com/1.1/statuses/user_timeline.json';
 
-exports.handler = function(event, context) {
-  fetchTwitterMemos(event.requestContext.identity.cognitoIdentityId);
+exports.handler = async function(event, context) {
+  await fetchTwitterMemos(event.requestContext.identity.cognitoIdentityId);
 
   const response = {
     statusCode: 200,
@@ -31,15 +32,15 @@ exports.handler = function(event, context) {
       hello: 'Hello, World',
     }),
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Origin': '*',
     },
   };
   context.succeed(response); // SUCCESS with message
 };
 
-const fetchTwitterMemos = (cognitoId) => {
-  getComputedStyle(cognitoId);
-}
+const fetchTwitterMemos = async(cognitoId) => {
+  await getTwitterUserIds(cognitoId);
+};
 
 const getTwitterUserIds = async(cognitoId) => {
   const user = await appsyncClient.query({
@@ -47,17 +48,17 @@ const getTwitterUserIds = async(cognitoId) => {
     variables: { id: cognitoId },
   });
 
-  console.log(user);
-}
+  return user.twitterId;
+};
 
 const appsyncClient = new AWSAppSyncClient({
   url: apiMemodonGraphQLAPIEndpointOutput,
   region: region,
   auth: {
-    type: "AWS_IAM",
-    credentials: () => aws.config.credentials
+    type: 'AWS_IAM',
+    credentials: () => aws.config.credentials,
   },
-  disableOffline: true
+  disableOffline: true,
 });
 
 // graphql queries
