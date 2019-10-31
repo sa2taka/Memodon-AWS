@@ -4,7 +4,7 @@ jobs:
   setup:
     working_directory: ~/workspace
     docker:
-      - image: circleci/node:latest
+      - image: cypress/base:10
     steps:
       - checkout
       - restore_cache:
@@ -27,7 +27,7 @@ jobs:
   lint:
     working_directory: ~/workspace
     docker:
-      - image: circleci/node:latest
+      - image: cypress/base:10
     steps:
       - attach_workspace:
           at: ~/
@@ -37,7 +37,7 @@ jobs:
   unit:
     working_directory: ~/workspace
     docker:
-      - image: circleci/node:latest
+      - image: cypress/base:10
     steps:
       - attach_workspace:
           at: ~/
@@ -107,7 +107,7 @@ workflows:
 #   node:
 #     working_directory: ~/workspace
 #     docker:
-#       - image: circleci/node:latest
+#       - image: cypress/base:10
 # commands:
 #   restore_yarn:
 #     steps:
