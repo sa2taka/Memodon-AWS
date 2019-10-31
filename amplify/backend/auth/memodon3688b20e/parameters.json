@@ -1,6 +1,6 @@
 {
     "identityPoolName": "memodon3688b20e_identitypool_3688b20e",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "memodo3688b20e",
     "userPoolName": "memodon3688b20e_userpool_3688b20e",
     "autoVerifiedAttributes": [

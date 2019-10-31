@@ -11,6 +11,13 @@
                     "/PATCH"
                 ]
             }
+        },
+        {
+            "name": "/twitter/auth-page",
+            "lambdaFunction": "generateTwitterAuthPage",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "MemodonAPI",
@@ -18,6 +25,9 @@
     "functionArns": [
         {
             "lambdaFunction": "fetchMemos"
+        },
+        {
+            "lambdaFunction": "generateTwitterAuthPage"
         }
     ],
     "privacy": {
@@ -34,6 +44,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "generateTwitterAuthPage",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
-    ]
+    ],
+    "uuid": "314e21a5"
 }
