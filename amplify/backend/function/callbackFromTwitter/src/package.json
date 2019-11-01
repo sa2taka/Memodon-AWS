@@ -5,8 +5,13 @@
   "author": "sa2taka",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.49.0",
+    "aws-appsync": "^2.0.1",
+    "aws-sdk": "^2.558.0",
+    "graphql": "^14.5.8",
+    "graphql-tag": "^2.10.1",
+    "isomorphic-fetch": "^2.2.1",
     "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.4",
+    "uuid": "^3.3.3"
   }
 }

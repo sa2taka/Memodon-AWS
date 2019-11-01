@@ -732,6 +732,9 @@ Resources:
             - cognito-idp.${region}.amazonaws.com/${client}
             - { region: !Ref "AWS::Region", client: !Ref UserPool }
 
+      SupportedLoginProviders:
+        "api.twitter.com": !Sub "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPIKey}};{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPISecret}}"
+
       AllowUnauthenticatedIdentities: !Ref allowUnauthenticatedIdentities
 
     DependsOn: UserPoolClientInputs

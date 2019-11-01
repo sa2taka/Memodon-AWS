@@ -43,14 +43,14 @@ const getToken = async (origin) => {
 
   const url = 'https://api.twitter.com/oauth/request_token';
   const method = 'POST';
-  const oauth_callback = origin + process.env['CALLBACK_PATH'];
+  const callback = process.env['CALLBACK_PATH'];
 
   const res = await rp({
     method,
     uri: url,
     timeout: 10 * 1000,
     form: {
-      oauth_callback,
+      oauth_callback: callback,
     },
     oauth: {
       consumer_key,

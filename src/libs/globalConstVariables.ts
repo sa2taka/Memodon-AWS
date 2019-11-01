@@ -8,6 +8,6 @@ export const MaxLargeWidth = 1903;
 export const MinExtraLargeWidth = 1904;
 
 export const APIEndPoint = 'https://api.memodon.com';
-export const SigninEndPoint = `${APIEndPoint}/auth/twitter/signin`;
+export const SigninEndPoint = `${APIEndPoint}/dev/twitter/callback`;
 export const AuthPageEndPoint = `${APIEndPoint}/dev/twitter/auth-page`;
 export const FetchMemosEndPoint = `${APIEndPoint}/dev/fetch`;
