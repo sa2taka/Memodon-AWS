@@ -1,5 +1,5 @@
 {
-    "tableName": "Session",
-    "partitionKeyName": "sessionId",
-    "partitionKeyType": "S"
+  "tableName": "Session",
+  "partitionKeyName": "sessionId",
+  "partitionKeyType": "S"
 }

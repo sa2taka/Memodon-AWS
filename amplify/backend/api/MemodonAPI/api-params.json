@@ -1,58 +1,63 @@
 {
-    "paths": [
-        {
-            "name": "/fetch",
-            "lambdaFunction": "fetchMemos",
-            "privacy": {
-                "private": true,
-                "auth": [
-                    "/GET",
-                    "/PUT",
-                    "/PATCH"
-                ]
-            }
-        },
-        {
-            "name": "/twitter/auth-page",
-            "lambdaFunction": "generateTwitterAuthPage",
-            "privacy": {
-                "open": true
-            }
-        }
-    ],
-    "resourceName": "MemodonAPI",
-    "apiName": "MemodonAPI",
-    "functionArns": [
-        {
-            "lambdaFunction": "fetchMemos"
-        },
-        {
-            "lambdaFunction": "generateTwitterAuthPage"
-        }
-    ],
-    "privacy": {
-        "auth": 1,
-        "unauth": 0,
-        "authRoleName": "memodon-dev-20191022195910-authRole",
-        "unAuthRoleName": "memodon-dev-20191022195910-unauthRole"
+  "paths": [
+    {
+      "name": "/fetch",
+      "lambdaFunction": "fetchMemos",
+      "privacy": {
+        "private": true,
+        "auth": ["/GET", "/PUT", "/PATCH"]
+      }
     },
-    "dependsOn": [
-        {
-            "category": "function",
-            "resourceName": "fetchMemos",
-            "attributes": [
-                "Name",
-                "Arn"
-            ]
-        },
-        {
-            "category": "function",
-            "resourceName": "generateTwitterAuthPage",
-            "attributes": [
-                "Name",
-                "Arn"
-            ]
-        }
-    ],
-    "uuid": "314e21a5"
+    {
+      "name": "/twitter/auth-page",
+      "lambdaFunction": "generateTwitterAuthPage",
+      "privacy": {
+        "open": true
+      }
+    },
+    {
+      "name": "/twitter/callback",
+      "lambdaFunction": "callbackFromTwitter",
+      "privacy": {
+        "open": true
+      }
+    }
+  ],
+  "resourceName": "MemodonAPI",
+  "apiName": "MemodonAPI",
+  "functionArns": [
+    {
+      "lambdaFunction": "fetchMemos"
+    },
+    {
+      "lambdaFunction": "generateTwitterAuthPage"
+    },
+    {
+      "lambdaFunction": "callbackFromTwitter"
+    }
+  ],
+  "privacy": {
+    "auth": 1,
+    "unauth": 0,
+    "authRoleName": "memodon-dev-20191022195910-authRole",
+    "unAuthRoleName": "memodon-dev-20191022195910-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "fetchMemos",
+      "attributes": ["Name", "Arn"]
+    },
+    {
+      "category": "function",
+      "resourceName": "generateTwitterAuthPage",
+      "attributes": ["Name", "Arn"]
+    },
+    {
+      "category": "function",
+      "resourceName": "callbackFromTwitter",
+      "attributes": ["Name", "Arn"]
+    }
+  ],
+  "uuid": "1420c937"
 }

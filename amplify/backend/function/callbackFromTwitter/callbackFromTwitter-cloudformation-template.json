@@ -5,6 +5,14 @@
 		"env": {
 			"Type": "String"
 		},
+		"storageSessionName": {
+			"Type": "String",
+			"Default": "storageSessionName"
+		},
+		"storageSessionArn": {
+			"Type": "String",
+			"Default": "storageSessionArn"
+		},
 		"authmemodon3688b20eUserPoolId": {
 			"Type": "String",
 			"Default": "authmemodon3688b20eUserPoolId"
@@ -40,12 +48,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"fetchMemos",
+						"callbackFromTwitter",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"fetchMemos",
+									"callbackFromTwitter",
 									"-",
 									{
 										"Ref": "env"
@@ -66,14 +74,34 @@
 						"AUTH_MEMODON3688B20E_USERPOOLID": {
 							"Ref": "authmemodon3688b20eUserPoolId"
 						},
+						"AUTH_MEMODON_IDENTITYPOOLID": {
+							"Fn::ImportValue": {
+								"Fn::If": [
+									"ShouldNotCreateEnvResources",
+									"memodon3688b20e-MemodonIdentityPool",
+									{
+										"Fn::Sub": "memodon3688b20e-${env}-MemodonIdentityPool"
+									}
+								]
+							}
+						},
 						"API_MEMODON_GRAPHQLAPIIDOUTPUT": {
 							"Ref": "apimemodonGraphQLAPIIdOutput"
 						},
 						"API_MEMODON_GRAPHQLAPIENDPOINTOUTPUT": {
 							"Ref": "apimemodonGraphQLAPIEndpointOutput"
 						},
+						"STORAGE_SESSION_NAME": {
+							"Ref": "storageSessionName"
+						},
+						"STORAGE_SESSION_ARN": {
+							"Ref": "storageSessionArn"
+						},
 						"TWITTER_API_KEY": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPIKey}}",
-						"TWITTER_API_SECRET": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPISecret}}"
+						"TWITTER_API_SECRET": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPISecret}}",
+						"DATE_TO_DELETE": 5,
+						"CALLBACK_PATH": "/signin/twitter",
+						"DEFAULT_CALLBACK_ORIGIN": "https://memodon.com"
 					}
 				},
 				"Role": {
@@ -86,7 +114,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "memodon-dev-20191022195910-deployment",
-					"S3Key": "amplify-builds/fetchMemos-724277397a2b374e526e-build.zip"
+					"S3Key": "amplify-builds/callbackFromTwitter-7338524b4c784d4b464c-build.zip"
 				}
 			}
 		},
@@ -96,12 +124,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"memodonLambdaRole8434ecb5",
+						"memodonLambdaRolec2af569d",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"memodonLambdaRole8434ecb5",
+									"memodonLambdaRolec2af569d",
 									"-",
 									{
 										"Ref": "env"
@@ -167,6 +195,33 @@
 									}
 								]
 							}
+						},
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:GetItem",
+								"dynamodb:Query",
+								"dynamodb:Scan",
+								"dynamodb:PutItem",
+								"dynamodb:UpdateItem",
+								"dynamodb:DeleteItem"
+							],
+							"Resource": [
+								{
+									"Ref": "storageSessionArn"
+								},
+								{
+									"Fn::Join": [
+										"/",
+										[
+											{
+												"Ref": "storageSessionArn"
+											},
+											"index/*"
+										]
+									]
+								}
+							]
 						}
 					]
 				}
@@ -190,6 +245,51 @@
 						{
 							"Effect": "Allow",
 							"Action": [
+								"cognito-idp:ConfirmSignUp",
+								"cognito-idp:AdminCreateUser",
+								"cognito-idp:CreateUserImportJob",
+								"cognito-idp:AdminSetUserSettings",
+								"cognito-idp:AdminLinkProviderForUser",
+								"cognito-idp:CreateIdentityProvider",
+								"cognito-idp:AdminConfirmSignUp",
+								"cognito-idp:AdminDisableUser",
+								"cognito-idp:AdminRemoveUserFromGroup",
+								"cognito-idp:SetUserMFAPreference",
+								"cognito-idp:SetUICustomization",
+								"cognito-idp:SignUp",
+								"cognito-idp:VerifyUserAttribute",
+								"cognito-idp:SetRiskConfiguration",
+								"cognito-idp:StartUserImportJob",
+								"cognito-idp:AdminSetUserPassword",
+								"cognito-idp:AssociateSoftwareToken",
+								"cognito-idp:CreateResourceServer",
+								"cognito-idp:RespondToAuthChallenge",
+								"cognito-idp:CreateUserPoolClient",
+								"cognito-idp:AdminUserGlobalSignOut",
+								"cognito-idp:GlobalSignOut",
+								"cognito-idp:AddCustomAttributes",
+								"cognito-idp:CreateGroup",
+								"cognito-idp:CreateUserPool",
+								"cognito-idp:AdminForgetDevice",
+								"cognito-idp:AdminAddUserToGroup",
+								"cognito-idp:AdminRespondToAuthChallenge",
+								"cognito-idp:ForgetDevice",
+								"cognito-idp:CreateUserPoolDomain",
+								"cognito-idp:AdminEnableUser",
+								"cognito-idp:AdminUpdateDeviceStatus",
+								"cognito-idp:StopUserImportJob",
+								"cognito-idp:InitiateAuth",
+								"cognito-idp:AdminInitiateAuth",
+								"cognito-idp:AdminSetUserMFAPreference",
+								"cognito-idp:ConfirmForgotPassword",
+								"cognito-idp:SetUserSettings",
+								"cognito-idp:VerifySoftwareToken",
+								"cognito-idp:AdminDisableProviderForUser",
+								"cognito-idp:SetUserPoolMfaConfig",
+								"cognito-idp:ChangePassword",
+								"cognito-idp:ConfirmDevice",
+								"cognito-idp:AdminResetUserPassword",
+								"cognito-idp:ResendConfirmationCode",
 								"cognito-identity:Describe*",
 								"cognito-identity:Get*",
 								"cognito-identity:List*",
@@ -247,8 +347,7 @@
 								"appsync:GraphQL",
 								"appsync:Get*",
 								"appsync:List*",
-								"appsync:Update*",
-								"appsync:Delete*"
+								"appsync:Update*"
 							],
 							"Resource": [
 								{

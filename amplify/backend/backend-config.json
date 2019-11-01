@@ -1,90 +1,103 @@
 {
-    "auth": {
-        "memodon3688b20e": {
-            "service": "Cognito",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": []
-        }
-    },
-    "api": {
-        "memodon": {
-            "service": "AppSync",
-            "providerPlugin": "awscloudformation",
-            "output": {
-                "authConfig": {
-                    "additionalAuthenticationProviders": [],
-                    "defaultAuthentication": {
-                        "authenticationType": "AWS_IAM"
-                    }
-                }
-            }
-        },
-        "MemodonAPI": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "function",
-                    "resourceName": "fetchMemos",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                },
-                {
-                    "category": "function",
-                    "resourceName": "generateTwitterAuthPage",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ]
-        }
-    },
-    "function": {
-        "fetchMemos": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "auth",
-                    "resourceName": "memodon3688b20e",
-                    "attributes": [
-                        "UserPoolId"
-                    ]
-                },
-                {
-                    "category": "api",
-                    "resourceName": "memodon",
-                    "attributes": [
-                        "GraphQLAPIIdOutput",
-                        "GraphQLAPIEndpointOutput"
-                    ]
-                }
-            ]
-        },
-        "generateTwitterAuthPage": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "storage",
-                    "resourceName": "Session",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ]
-        }
-    },
-    "storage": {
-        "Session": {
-            "service": "DynamoDB",
-            "providerPlugin": "awscloudformation"
-        }
+  "auth": {
+    "memodon3688b20e": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
     }
+  },
+  "api": {
+    "memodon": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "authenticationType": "AWS_IAM"
+          }
+        }
+      }
+    },
+    "MemodonAPI": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "fetchMemos",
+          "attributes": ["Name", "Arn"]
+        },
+        {
+          "category": "function",
+          "resourceName": "generateTwitterAuthPage",
+          "attributes": ["Name", "Arn"]
+        },
+        {
+          "category": "function",
+          "resourceName": "callbackFromTwitter",
+          "attributes": ["Name", "Arn"]
+        }
+      ]
+    }
+  },
+  "function": {
+    "fetchMemos": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "memodon3688b20e",
+          "attributes": ["UserPoolId"]
+        },
+        {
+          "category": "api",
+          "resourceName": "memodon",
+          "attributes": ["GraphQLAPIIdOutput", "GraphQLAPIEndpointOutput"]
+        }
+      ]
+    },
+    "generateTwitterAuthPage": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "Session",
+          "attributes": ["Name", "Arn"]
+        }
+      ]
+    },
+    "callbackFromTwitter": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "Session",
+          "attributes": ["Name", "Arn"]
+        },
+        {
+          "category": "auth",
+          "resourceName": "memodon3688b20e",
+          "attributes": ["UserPoolId"]
+        },
+        {
+          "category": "api",
+          "resourceName": "memodon",
+          "attributes": ["GraphQLAPIIdOutput", "GraphQLAPIEndpointOutput"]
+        }
+      ]
+    }
+  },
+  "storage": {
+    "Session": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
+    }
+  }
 }
