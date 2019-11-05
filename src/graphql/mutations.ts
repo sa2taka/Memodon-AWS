@@ -11,6 +11,8 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
     isPrivate
     OAuthToken
     OAuthSecret
+    lastFetchDate
+    lastFetchTweetId
     note {
       items {
         id
@@ -25,6 +27,11 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
         userName
         displayName
         iconUrl
+        lastFetchDate
+        lastFetchTweetId
+        OAuthToken
+        OAuthSecret
+        provider
       }
       nextToken
     }
@@ -41,6 +48,8 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
     isPrivate
     OAuthToken
     OAuthSecret
+    lastFetchDate
+    lastFetchTweetId
     note {
       items {
         id
@@ -55,6 +64,11 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
         userName
         displayName
         iconUrl
+        lastFetchDate
+        lastFetchTweetId
+        OAuthToken
+        OAuthSecret
+        provider
       }
       nextToken
     }
@@ -71,6 +85,8 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
     isPrivate
     OAuthToken
     OAuthSecret
+    lastFetchDate
+    lastFetchTweetId
     note {
       items {
         id
@@ -85,6 +101,11 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
         userName
         displayName
         iconUrl
+        lastFetchDate
+        lastFetchTweetId
+        OAuthToken
+        OAuthSecret
+        provider
       }
       nextToken
     }
@@ -97,6 +118,11 @@ export const createSubUser = `mutation CreateSubUser($input: CreateSubUserInput!
     userName
     displayName
     iconUrl
+    lastFetchDate
+    lastFetchTweetId
+    OAuthToken
+    OAuthSecret
+    provider
     user {
       id
       twitterId
@@ -106,6 +132,8 @@ export const createSubUser = `mutation CreateSubUser($input: CreateSubUserInput!
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -122,6 +150,11 @@ export const updateSubUser = `mutation UpdateSubUser($input: UpdateSubUserInput!
     userName
     displayName
     iconUrl
+    lastFetchDate
+    lastFetchTweetId
+    OAuthToken
+    OAuthSecret
+    provider
     user {
       id
       twitterId
@@ -131,6 +164,8 @@ export const updateSubUser = `mutation UpdateSubUser($input: UpdateSubUserInput!
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -147,6 +182,11 @@ export const deleteSubUser = `mutation DeleteSubUser($input: DeleteSubUserInput!
     userName
     displayName
     iconUrl
+    lastFetchDate
+    lastFetchTweetId
+    OAuthToken
+    OAuthSecret
+    provider
     user {
       id
       twitterId
@@ -156,6 +196,8 @@ export const deleteSubUser = `mutation DeleteSubUser($input: DeleteSubUserInput!
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -179,6 +221,8 @@ export const createMemo = `mutation CreateMemo($input: CreateMemoInput!) {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -209,6 +253,8 @@ export const updateMemo = `mutation UpdateMemo($input: UpdateMemoInput!) {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -239,6 +285,8 @@ export const deleteMemo = `mutation DeleteMemo($input: DeleteMemoInput!) {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }

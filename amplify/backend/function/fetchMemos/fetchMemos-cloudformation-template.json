@@ -86,7 +86,7 @@
 				"Timeout": "90",
 				"Code": {
 					"S3Bucket": "memodon-dev-20191022195910-deployment",
-					"S3Key": "amplify-builds/fetchMemos-39455262574e3746536e-build.zip"
+					"S3Key": "amplify-builds/fetchMemos-326339693444686c3275-build.zip"
 				}
 			}
 		},

@@ -154,6 +154,41 @@ const getUser = `query GetUser($id: ID!) {
     isPrivate
     OAuthToken
     OAuthSecret
+    lastFetchDate
+    lastFetchTweetId
+    note {
+      items {
+        id
+        statusId
+        createdAt
+      }
+      nextToken
+    }
+    subUser {
+      items {
+        id
+        userName
+        displayName
+        iconUrl
+      }
+      nextToken
+    }
+  }
+}
+`;
+
+export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    id
+    twitterId
+    userName
+    displayName
+    iconUrl
+    isPrivate
+    OAuthToken
+    OAuthSecret
+    lastFetchDate
+    lastFetchTweetId
     note {
       items {
         id

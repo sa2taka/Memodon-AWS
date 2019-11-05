@@ -17,6 +17,8 @@ type User
   isPrivate: Boolean
   OAuthToken: String!
   OAuthSecret: String!
+  lastFetchDate: AWSDateTime
+  lastFetchTweetId: String
   note: [Memo] @connection(name: "UserNote", sortField: "createdAt")
   subUser: [SubUser] @connection(name: "SubUsers")
 }
@@ -36,6 +38,11 @@ type SubUser
   userName: String!
   displayName: String!
   iconUrl: AWSURL!
+  lastFetchDate: AWSDateTime
+  lastFetchTweetId: String
+  OAuthToken: String
+  OAuthSecret: String
+  provider: String!
   user: User! @connection(name: "SubUsers")
 }
 

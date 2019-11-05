@@ -11,6 +11,8 @@ export const getUser = `query GetUser($id: ID!) {
     isPrivate
     OAuthToken
     OAuthSecret
+    lastFetchDate
+    lastFetchTweetId
     note {
       items {
         id
@@ -25,6 +27,11 @@ export const getUser = `query GetUser($id: ID!) {
         userName
         displayName
         iconUrl
+        lastFetchDate
+        lastFetchTweetId
+        OAuthToken
+        OAuthSecret
+        provider
       }
       nextToken
     }
@@ -37,6 +44,11 @@ export const getSubUser = `query GetSubUser($id: ID!) {
     userName
     displayName
     iconUrl
+    lastFetchDate
+    lastFetchTweetId
+    OAuthToken
+    OAuthSecret
+    provider
     user {
       id
       twitterId
@@ -46,6 +58,8 @@ export const getSubUser = `query GetSubUser($id: ID!) {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -67,6 +81,11 @@ export const listSubUsers = `query ListSubUsers(
       userName
       displayName
       iconUrl
+      lastFetchDate
+      lastFetchTweetId
+      OAuthToken
+      OAuthSecret
+      provider
       user {
         id
         twitterId
@@ -76,6 +95,8 @@ export const listSubUsers = `query ListSubUsers(
         isPrivate
         OAuthToken
         OAuthSecret
+        lastFetchDate
+        lastFetchTweetId
       }
     }
     nextToken
@@ -95,6 +116,8 @@ export const getMemo = `query GetMemo($id: ID!, $createdAt: AWSTimestamp!) {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -140,6 +163,8 @@ export const listMemos = `query ListMemos(
         isPrivate
         OAuthToken
         OAuthSecret
+        lastFetchDate
+        lastFetchTweetId
       }
       tags {
         nextToken

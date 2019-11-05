@@ -14,6 +14,8 @@ export const onCreateMemo = `subscription OnCreateMemo {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -44,6 +46,8 @@ export const onUpdateMemo = `subscription OnUpdateMemo {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
@@ -74,6 +78,8 @@ export const onDeleteMemo = `subscription OnDeleteMemo {
       isPrivate
       OAuthToken
       OAuthSecret
+      lastFetchDate
+      lastFetchTweetId
       note {
         nextToken
       }
