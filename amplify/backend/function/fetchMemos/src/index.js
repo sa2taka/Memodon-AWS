@@ -11,6 +11,7 @@ Amplify Params - DO NOT EDIT */
 const aws = require('aws-sdk');
 const AWSAppSyncClient = require('aws-appsync').default;
 const gql = require('graphql-tag');
+const rp = require('request-promise');
 require('isomorphic-fetch');
 
 const environment = process.env.ENV;
@@ -29,7 +30,7 @@ exports.handler = async function(event, context) {
   const response = {
     statusCode: 200,
     body: JSON.stringify({
-      hello: 'Hello, World',
+      hello: 'success',
     }),
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -38,17 +39,89 @@ exports.handler = async function(event, context) {
   context.succeed(response); // SUCCESS with message
 };
 
-const fetchTwitterMemos = async (cognitoId) => {
-  await getTwitterUserIds(cognitoId);
+const fetchTwitterMemos = (cognitoId) => {
+  return getTwitterUserInfo(cognitoId).then(({ id, token, secret }) => {
+    return crawlAndFilterTimeline(id, token, secret);
+  });
 };
 
-const getTwitterUserIds = async (cognitoId) => {
-  const user = await appsyncClient.query({
-    query: gql(getUser),
-    variables: { id: cognitoId },
-  });
+const crawlAndFilterTimeline = async (user_id, token, secret) => {
+  let memos = [];
+  let max_id = null;
+  const count = 200;
+  while (true) {
+    let data = {
+      user_id,
+      count,
+    };
 
-  return user.twitterId;
+    if (max_id) {
+      data.max_id = max_id;
+    }
+
+    const timeline = await get(
+      twitterAPIUserTimelineEndpoint,
+      token,
+      secret,
+      data
+    );
+
+    max_id = timeline[timeline.length - 1]
+      ? timeline[timeline.length - 1].id
+      : max_id;
+
+    memos = memos.concat(
+      timeline.filter((tweet) => {
+        return (
+          tweet.text.includes('#メモ') ||
+          tweet.text.toLowerCase().includes('#memo')
+        );
+      })
+    );
+    if (timeline.length < 10) {
+      break;
+    }
+
+    await sleep(1500);
+  }
+  console.log(memos);
+  return memos;
+};
+
+const getTwitterUserInfo = (cognitoId) => {
+  return appsyncClient
+    .query({
+      query: gql(getUser),
+      variables: { id: cognitoId },
+    })
+    .then((user) => {
+      return {
+        id: user.data.getUser.twitterId,
+        token: user.data.getUser.OAuthToken,
+        secret: user.data.getUser.OAuthSecret,
+      };
+    });
+};
+
+const get = (url, token, token_secret, qs) => {
+  const consumer_key = process.env.TWITTER_API_KEY;
+  const consumer_secret = process.env.TWITTER_API_SECRET;
+  return rp({
+    method: 'GET',
+    uri: url,
+    timeout: 30 * 1000,
+    oauth: {
+      consumer_key,
+      consumer_secret,
+      token,
+      token_secret,
+    },
+    json: true,
+    qs,
+  }).catch((error) => {
+    console.error(error);
+    throw error;
+  });
 };
 
 const appsyncClient = new AWSAppSyncClient({
@@ -61,6 +134,14 @@ const appsyncClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
+const sleep = async (t) => {
+  return await new Promise((r) => {
+    setTimeout(() => {
+      r();
+    }, t);
+  });
+};
+
 // graphql queries
 
 const getUser = `query GetUser($id: ID!) {
@@ -71,6 +152,8 @@ const getUser = `query GetUser($id: ID!) {
     displayName
     iconUrl
     isPrivate
+    OAuthToken
+    OAuthSecret
     note {
       items {
         id
