@@ -9,34 +9,48 @@ AWS.config.update({ region: 'ap-northeast-1' });
 const ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 
 exports.handler = async (event, context) => {
-  const origin = getOrigin(event.referer);
+  let origin = '';
+
+  if (process.env['ENV'] !== 'prod' && event.headers) {
+    origin = getOrigin(event.headers.referer || event.headers.Referer);
+  } else {
+    origin = process.env['DEFAULT_CALLBACK_ORIGIN'];
+  }
+
   const { token, secret } = await getToken(origin);
 
-  const sessionId = await putToDynamo(secret);
+  const sessionId = await putToDynamo(secret, origin);
   const setCookieSentence = generateSetCookieSentence(sessionId);
 
   const redirect = `https://api.twitter.com/oauth/authorize?oauth_token=${token}`;
+  const response = {
+    statusCode: 302,
+    body: '',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Location: redirect,
+      'Set-Cookie': setCookieSentence,
+    },
+  };
+
   // Cookie is mapped to Set-Cookie header
-  context.succeed({
-    Location: redirect,
-    Cookie: setCookieSentence,
-  });
+  context.succeed(response);
 };
 
 const getToken = async (origin) => {
-  const consumer_key = process.env['ConsumerKey'];
-  const consumer_secret = process.env['ConsumerSecret'];
+  const consumer_key = process.env['TWITTER_API_KEY'];
+  const consumer_secret = process.env['TWITTER_API_SECRET'];
 
   const url = 'https://api.twitter.com/oauth/request_token';
   const method = 'POST';
-  const oauth_callback = origin + process.env['callbackPath'];
+  const callback = origin + process.env['CALLBACK_PATH'];
 
   const res = await rp({
     method,
     uri: url,
     timeout: 10 * 1000,
     form: {
-      oauth_callback,
+      oauth_callback: callback,
     },
     oauth: {
       consumer_key,
@@ -67,9 +81,9 @@ const parseAuthRes = (res) => {
 const putToDynamo = async (secret, origin) => {
   const sessionId = crypto.randomBytes(16).toString('hex');
   const dateToDelete =
-    Math.floor(Date.now() / 1000) + process.env['TimeToDelete'] * 60;
+    Math.floor(Date.now() / 1000) + process.env['DATE_TO_DELETE'] * 60;
   const params = {
-    TableName: 'Session',
+    TableName: process.env['STORAGE_SESSION_NAME'],
     Item: {
       sessionId: {
         S: sessionId,
@@ -79,6 +93,9 @@ const putToDynamo = async (secret, origin) => {
       },
       dateToDelete: {
         N: dateToDelete.toString(),
+      },
+      origin: {
+        S: origin,
       },
     },
   };
@@ -103,7 +120,7 @@ const generateSetCookieSentence = (sessionId) => {
 
 const getOrigin = (referer) => {
   if (!referer || referer === '') {
-    return process.env['defaultCallbackOrigin'];
+    return process.env['DEFAULT_CALLBACK_ORIGIN'];
   }
   return new URL(referer).origin;
 };

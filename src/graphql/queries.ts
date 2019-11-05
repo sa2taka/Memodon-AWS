@@ -9,6 +9,8 @@ export const getUser = `query GetUser($id: ID!) {
     displayName
     iconUrl
     isPrivate
+    OAuthToken
+    OAuthSecret
     note {
       items {
         id
@@ -42,6 +44,8 @@ export const getSubUser = `query GetSubUser($id: ID!) {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -70,6 +74,8 @@ export const listSubUsers = `query ListSubUsers(
         displayName
         iconUrl
         isPrivate
+        OAuthToken
+        OAuthSecret
       }
     }
     nextToken
@@ -87,6 +93,8 @@ export const getMemo = `query GetMemo($id: ID!, $createdAt: AWSTimestamp!) {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -130,6 +138,8 @@ export const listMemos = `query ListMemos(
         displayName
         iconUrl
         isPrivate
+        OAuthToken
+        OAuthSecret
       }
       tags {
         nextToken

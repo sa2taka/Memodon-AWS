@@ -11,6 +11,20 @@
                     "/PATCH"
                 ]
             }
+        },
+        {
+            "name": "/twitter/auth-page",
+            "lambdaFunction": "generateTwitterAuthPage",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/twitter/callback",
+            "lambdaFunction": "callbackFromTwitter",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "MemodonAPI",
@@ -18,6 +32,12 @@
     "functionArns": [
         {
             "lambdaFunction": "fetchMemos"
+        },
+        {
+            "lambdaFunction": "generateTwitterAuthPage"
+        },
+        {
+            "lambdaFunction": "callbackFromTwitter"
         }
     ],
     "privacy": {
@@ -34,6 +54,23 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "generateTwitterAuthPage",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "callbackFromTwitter",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
-    ]
+    ],
+    "uuid": "829110c4"
 }

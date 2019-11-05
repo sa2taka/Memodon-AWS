@@ -38,11 +38,11 @@ exports.handler = async function(event, context) {
   context.succeed(response); // SUCCESS with message
 };
 
-const fetchTwitterMemos = async(cognitoId) => {
+const fetchTwitterMemos = async (cognitoId) => {
   await getTwitterUserIds(cognitoId);
 };
 
-const getTwitterUserIds = async(cognitoId) => {
+const getTwitterUserIds = async (cognitoId) => {
   const user = await appsyncClient.query({
     query: gql(getUser),
     variables: { id: cognitoId },

@@ -1,8 +1,11 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>Memodon</span>
+      <v-toolbar-title
+        @click="$router.push('/')"
+        class="headline text-uppercase"
+      >
+        <span class="navbar-title">Memodon</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
@@ -102,5 +105,10 @@ export default class App extends Vue {
   position: relative;
   top: 12px;
   margin-left: 4px;
+}
+
+.navbar-title {
+  user-select: none;
+  cursor: pointer;
 }
 </style>

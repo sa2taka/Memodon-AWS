@@ -42,7 +42,9 @@
             "function": {
                 "fetchMemos": {},
                 "memodon3688b20e": {},
-                "memodon": {}
+                "memodon": {},
+                "callbackFromTwitter": {},
+                "generateTwitterAuthPage": {}
             }
         }
     }

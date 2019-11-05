@@ -9,6 +9,8 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
     displayName
     iconUrl
     isPrivate
+    OAuthToken
+    OAuthSecret
     note {
       items {
         id
@@ -37,6 +39,8 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
     displayName
     iconUrl
     isPrivate
+    OAuthToken
+    OAuthSecret
     note {
       items {
         id
@@ -65,6 +69,8 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
     displayName
     iconUrl
     isPrivate
+    OAuthToken
+    OAuthSecret
     note {
       items {
         id
@@ -98,6 +104,8 @@ export const createSubUser = `mutation CreateSubUser($input: CreateSubUserInput!
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -121,6 +129,8 @@ export const updateSubUser = `mutation UpdateSubUser($input: UpdateSubUserInput!
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -144,6 +154,8 @@ export const deleteSubUser = `mutation DeleteSubUser($input: DeleteSubUserInput!
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -165,6 +177,8 @@ export const createMemo = `mutation CreateMemo($input: CreateMemoInput!) {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -193,6 +207,8 @@ export const updateMemo = `mutation UpdateMemo($input: UpdateMemoInput!) {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -221,6 +237,8 @@ export const deleteMemo = `mutation DeleteMemo($input: DeleteMemoInput!) {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }

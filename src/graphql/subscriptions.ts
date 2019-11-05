@@ -12,6 +12,8 @@ export const onCreateMemo = `subscription OnCreateMemo {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -40,6 +42,8 @@ export const onUpdateMemo = `subscription OnUpdateMemo {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }
@@ -68,6 +72,8 @@ export const onDeleteMemo = `subscription OnDeleteMemo {
       displayName
       iconUrl
       isPrivate
+      OAuthToken
+      OAuthSecret
       note {
         nextToken
       }

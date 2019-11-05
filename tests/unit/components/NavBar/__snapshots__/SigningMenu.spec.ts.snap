@@ -30,6 +30,23 @@ exports[`Component is a Vue instance 1`] = `
   >
     <v-list-item-content-stub>
       <v-list-item-title-stub>
+        <v-btn-stub
+          activeclass=""
+          tag="button"
+          type="button"
+        >
+          fetch memo
+        </v-btn-stub>
+      </v-list-item-title-stub>
+    </v-list-item-content-stub>
+  </v-list-item-stub>
+   
+  <v-list-item-stub
+    activeclass=""
+    tag="div"
+  >
+    <v-list-item-content-stub>
+      <v-list-item-title-stub>
         <div
           class="signout-button"
         >
