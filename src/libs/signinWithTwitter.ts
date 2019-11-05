@@ -34,63 +34,33 @@ const signinWithTwitter = async (
 export default signinWithTwitter;
 
 const signinAlongFlow = (preToken: string, verifier: string) => {
-  let twitterIdInfo: string;
-  let displayNameInfo: string;
-  let iconUrlInfo: string;
-  let tokenInfo: string;
-  let secretInfo: string;
-
+  // This method name is 'getToken', but it save or update user in backend.
   return getToken(preToken, verifier)
     .then((response) => {
-      const {
-        id,
-        ownerId,
-        name,
-        screenName,
-        iconUrl,
-        token,
-        secret,
-      } = response.data;
+      if (response.result === 'error') {
+        throw response.reason;
+      }
+      const { token, secret, twitterId, userName } = response.data;
 
-      twitterIdInfo = ownerId;
-      displayNameInfo = name;
-      iconUrlInfo = iconUrl;
-      tokenInfo = token;
-      secretInfo = secret;
-
-      return signin(token, secret, id, ownerId, screenName);
+      return signin(token, secret, twitterId, userName);
+    })
+    .catch((e) => {
+      reason = e;
+      User.signOut();
+      return Promise.reject(reason);
     })
     .then((cred) => {
       return Auth.currentAuthenticatedUser();
     })
-    .then(async (user) => {
-      const existedUser = (await getUser(user.id)) as {
+    .then((user) => {
+      return getUser(user.id) as Promise<{
         data: {
           getUser: UserState;
         };
-      };
-
-      if (existedUser.data.getUser) {
-        return existedUser.data.getUser;
-      }
-
-      const createdUser = (await pushUserToDatabase(
-        user,
-        twitterIdInfo,
-        displayNameInfo,
-        iconUrlInfo,
-        tokenInfo,
-        secretInfo
-      )) as {
-        data: {
-          createUser: UserState;
-        };
-      };
-
-      return createdUser.data.createUser;
+      }>;
     })
     .then(async (userInfo) => {
-      return setUserInfoToState(userInfo);
+      return setUserInfoToState(userInfo.data.getUser);
     })
     .catch((e) => {
       reason = 'auth_error';
@@ -103,39 +73,31 @@ const getToken = (
   oauthToken: string,
   oauthVerifier: string
 ): Promise<SigninData> => {
-  const url = SigninEndPoint;
-  const body = JSON.stringify({
-    oauth_token: oauthToken,
-    oauth_verifier: oauthVerifier,
-  });
-  const headers = { 'Content-Type': 'application/json' };
-  const postInit: RequestInit = {
-    method: 'POST',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'include',
-    headers,
-    body,
-  };
+  const endpoint = SigninEndPoint;
+  const query = `oauth_token=${oauthToken}&oauth_verifier=${oauthVerifier}`;
 
-  return wrapper<SigninData>(fetch(url, postInit));
+  return wrapper<SigninData>(
+    fetch(`${endpoint}?${query}`, {
+      mode: 'cors',
+      credentials: 'include',
+    })
+  );
 };
 
 const signin = (
   token: string,
   secret: string,
-  id: string,
   twitterId: string,
-  screenName: string
+  userName: string
 ) => {
   const domain = 'api.twitter.com';
-  const user = { name: screenName };
+  const user = { name: userName };
 
   return Auth.federatedSignIn(
     domain,
     {
       token: `${token};${secret}`,
-      identity_id: id,
+      identity_id: twitterId,
       expires_at: 30 * 24 * 60 * 60 * 1000 + Date.now(),
     },
     user

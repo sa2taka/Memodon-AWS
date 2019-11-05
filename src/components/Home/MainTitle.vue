@@ -58,6 +58,7 @@ export default class MainTitle extends Vue {
   justify-content: center;
   position: relative;
   top: 60px;
+  user-select: none;
 }
 
 .index-title {

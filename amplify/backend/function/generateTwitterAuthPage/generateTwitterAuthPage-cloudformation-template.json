@@ -68,7 +68,7 @@
 						"TWITTER_API_KEY": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPIKey}}",
 						"TWITTER_API_SECRET": "{{resolve:secretsmanager:arn:aws:secretsmanager:ap-northeast-1:876243670426:secret:Memodon/TwitterAPIKeys-7O9Fqw:SecretString:MemodonTwitterAPISecret}}",
 						"DATE_TO_DELETE": 5,
-						"CALLBACK_PATH": {
+						"CALLBACK_URL": {
 							"Fn::If": [
 								"ShouldNotCreateEnvResources",
 								"https://api.memodon.com/twitter/callback",
@@ -76,7 +76,8 @@
 									"Fn::Sub": "https://api.memodon.com/${env}/twitter/callback"
 								}
 							]
-						}
+						},
+						"CALLBACK_PATH": "/signin/twitter"
 					}
 				},
 				"Role": {
@@ -89,7 +90,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "memodon-dev-20191022195910-deployment",
-					"S3Key": "amplify-builds/generateTwitterAuthPage-677134544633316e504f-build.zip"
+					"S3Key": "amplify-builds/generateTwitterAuthPage-32324b77587a6b6a6d72-build.zip"
 				}
 			}
 		},

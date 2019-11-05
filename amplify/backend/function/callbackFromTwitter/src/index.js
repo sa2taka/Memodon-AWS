@@ -17,10 +17,15 @@ const GraphQLEndpoint = process.env.API_MEMODON_GRAPHQLAPIENDPOINTOUTPUT;
 exports.handler = async (event, context) => {
   const oauthToken = event.queryStringParameters.oauth_token;
   const oauthVerifier = event.queryStringParameters.oauth_verifier;
+  let sessionId = '';
+  try {
+    sessionId = parseSessionId(event.headers.Cookie || event.headers.cookie);
+  } catch {
+    const origin = process.env['DEFAULT_CALLBACK_ORIGIN'];
+    const data = { result: 'error', reason: 'session_invalid' };
+    call(context, data, origin);
+  }
 
-  const sessionId = parseSessionId(
-    event.headers.Cookie || event.headers.cookie
-  );
   const sessionData = await pullSessionData(sessionId);
 
   let origin = '';
@@ -32,41 +37,20 @@ exports.handler = async (event, context) => {
     origin = process.env['DEFAULT_CALLBACK_ORIGIN'];
   }
 
-  const callbackPath = origin + process.env.CALLBACK_PATH;
-
   const oauthSecret = sessionData.Item.tokenSecret.S;
   const dateToDelete = sessionData.Item.dateToDelete.N;
 
   if (!oauthToken || !oauthVerifier) {
     // FIXME This is against the DRY.
     const data = { result: 'error', reason: 'invalid_access' };
-
-    const response = {
-      statusCode: 302,
-      headers: {
-        Location: `${callbackPath}&${qs.stringify(data)}`,
-        'Access-Control-Allow-Origin': '*',
-        'Set-Cookie': 'sessionId=deleted; Max-Age=-1',
-      },
-    };
-    context.succeed(response);
+    call(context, data, origin);
     return;
   }
 
   if (dateToDelete - Math.floor(Date.now() / 1000) < 0) {
     // FIXME This is against the DRY.
-    const data = { result: 'error', reason: 'session_timeout' };
-
-    const response = {
-      statusCode: 302,
-      headers: {
-        Location: `${callbackPath}&${qs.stringify(data)}`,
-        'Access-Control-Allow-Origin': '*',
-        'Set-Cookie': 'sessionId=deleted; Max-Age=-1',
-      },
-    };
-
-    context.succeed(response);
+    const data = { result: 'error', reason: 'session_invalid' };
+    call(context, data, origin);
     return;
   }
 
@@ -76,19 +60,8 @@ exports.handler = async (event, context) => {
     oauthVerifier
   ).catch((err) => {
     console.log('Error', err, err.stack);
-    // FIXME This is against the DRY.
     const data = { result: 'error', reason: 'auth_error' };
-
-    const response = {
-      statusCode: 302,
-      headers: {
-        Location: `${callbackPath}&${qs.stringify(data)}`,
-        'Access-Control-Allow-Origin': '*',
-        'Set-Cookie': 'sessionId=deleted; Max-Age=-1',
-      },
-    };
-
-    context.succeed(response);
+    call(context, data, origin);
     return;
   });
 
@@ -98,7 +71,7 @@ exports.handler = async (event, context) => {
   const data = await Promise.all([cognito_id_promise, twitter_info_promise])
     .then((values) => {
       const { IdentityId } = values[0];
-      const { name, screen_name, profile_image_url_https } = values[1];
+      const { name, profile_image_url_https } = values[1];
 
       return saveUser({
         cognitoId: IdentityId,
@@ -111,23 +84,22 @@ exports.handler = async (event, context) => {
       });
     })
     .then((data) => {
-      return { result: 'success', data };
+      return {
+        result: 'success',
+        data: {
+          twitterid: data.twitterId,
+          userName: data.userName,
+          token: data.OAuthToken,
+          secret: data.OAuthSecret,
+        },
+      };
     })
     .catch((err) => {
       console.log('Error', err, err.stack);
       return { result: 'error', reason: 'auth_error' };
     });
 
-  const response = {
-    statusCode: 302,
-    headers: {
-      Location: `${callbackPath}&${qs.stringify(data)}`,
-      'Access-Control-Allow-Origin': '*',
-      'Set-Cookie': 'sessionId=deleted; Max-Age=-1',
-    },
-  };
-
-  context.succeed(response);
+  call(context, data, origin);
 };
 
 const parseSessionId = (cookie) => {
@@ -236,7 +208,7 @@ const saveUser = (data) => {
     })
     .then((user) => {
       if (user.data.getUser) {
-        return user.data.getUser;
+        return user;
       }
 
       return appsyncClient.mutate({
@@ -254,6 +226,9 @@ const saveUser = (data) => {
         },
       });
     })
+    .then(({ data }) => {
+      return data.getUser || data.createUser;
+    })
     .catch((err) => {
       console.log(err);
     });
@@ -269,6 +244,20 @@ const appsyncClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
+const call = (context, data, origin) => {
+  console.log(data);
+  const response = {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': origin,
+      'Set-Cookie': 'sessionId=deleted; Max-Age=-1',
+      'Access-Control-Allow-Credentials': 'true',
+    },
+    body: JSON.stringify(data),
+  };
+  context.succeed(response);
+};
+
 // graphQL queries
 
 const getUser = `query GetUser($id: ID!) {
@@ -279,6 +268,8 @@ const getUser = `query GetUser($id: ID!) {
     displayName
     iconUrl
     isPrivate
+    OAuthToken
+    OAuthSecret
     note {
       items {
         id
@@ -300,7 +291,7 @@ const getUser = `query GetUser($id: ID!) {
 }
 `;
 
-const createUser = `mutation CreateUser($input: CreateUserInput!) {
+`mutation CreateUser($input: CreateUserInput!) {
   createUser(input: $input) {
     id
     twitterId
